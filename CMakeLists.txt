@@ -24,7 +24,8 @@ qt_add_qml_module(texteditorexample
     NO_RESOURCE_TARGET_PATH
     QML_FILES
         "qml/+touch/texteditor.qml"
-        "qml/texteditor.qml"
+        "qml/wordprocessor.qml"
+        "qml/page.qml"
     RESOURCES
         "texteditor.html"
         "+touch/texteditor.html"

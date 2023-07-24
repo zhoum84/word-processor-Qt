@@ -8,6 +8,7 @@
 #include <QObject>
 #include <QTextCursor>
 #include <QUrl>
+#include <QtQml/qqmlregistration.h>
 
 QT_BEGIN_NAMESPACE
 class QTextDocument;
@@ -37,7 +38,7 @@ class DocumentHandler : public QObject
     Q_PROPERTY(QUrl fileUrl READ fileUrl NOTIFY fileUrlChanged)
 
     Q_PROPERTY(bool modified READ modified WRITE setModified NOTIFY modifiedChanged)
-
+    QML_ELEMENT
 public:
     explicit DocumentHandler(QObject *parent = nullptr);
 

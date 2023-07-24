@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
     if (QFontDatabase::addApplicationFont(":/fonts/fontello.ttf") == -1)
         qWarning() << "Failed to load fontello.ttf";
 
-    qmlRegisterType<DocumentHandler>("io.qt.examples.texteditor", 1, 0, "DocumentHandler");
+    qmlRegisterType<DocumentHandler>("my.wordprocessor", 1, 0, "DocumentHandler");
 
     QStringList selectors;
 #ifdef QT_EXTRA_FILE_SELECTOR
@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     engine.setExtraFileSelectors(selectors);
 
-    engine.load(QUrl("qrc:/qml/texteditor.qml"));
+    engine.load(QUrl("qrc:/qml/wordprocessor.qml"));
     if (engine.rootObjects().isEmpty())
         return -1;
 
