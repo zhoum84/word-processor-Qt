@@ -160,9 +160,12 @@ void DocumentHandler::load(const QUrl &fileUrl)
             if (QTextDocument *doc = textDocument()) {
                 doc->setBaseUrl(path.adjusted(QUrl::RemoveFilename));
                 doc->setModified(false);
-                if (mime.inherits("text/markdown")) {
+                if (mime.inherits("text/markdown"))
+                {
                     emit loaded(QString::fromUtf8(data), Qt::MarkdownText);
-                } else {
+                }
+                else
+                {
                     auto encoding = QStringConverter::encodingForHtml(data);
                     if (encoding) {
                         QStringDecoder decoder(*encoding);

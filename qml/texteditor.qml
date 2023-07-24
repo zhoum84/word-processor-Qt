@@ -18,13 +18,13 @@ ApplicationWindow {
     width: Screen.desktopAvailableWidth
     height: Screen.desktopAvailableHeight
     visibility: "Maximized"
-
     visible: true
     title: document.fileName + " - Text Editor Example"
 
     Component.onCompleted: {
         x = Screen.width / 2 - width / 2
         y = Screen.height / 2 - height / 2
+
     }
 
 
@@ -86,6 +86,7 @@ ApplicationWindow {
     Platform.MenuBar {
 
         Platform.Menu {
+
             title: qsTr("&File")
 
             Platform.MenuItem {
@@ -178,7 +179,7 @@ ApplicationWindow {
         id: openDialog
         fileMode: FileDialog.OpenFile
         selectedNameFilter.index: 1
-        nameFilters: ["Text files (*.txt)", "HTML files (*.html *.htm)", "Markdown files (*.md *.markdown)"]
+        nameFilters: ["Available Text file formats (*.txt; *.html; *htm; *md; *.markdown; *.docx; *.docm; *doc)","Text files (*.txt)", "HTML files (*.html *.htm)", "Markdown files (*.md *.markdown)", "Microsoft Word Documents (*.docx; *.docm; *doc)"]
         currentFolder: StandardPaths.writableLocation(StandardPaths.DocumentsLocation)
         onAccepted: document.load(selectedFile)
     }
@@ -233,7 +234,7 @@ ApplicationWindow {
                     focusPolicy: Qt.TabFocus
                 }
                 ToolSeparator {
-                    contentItem.visible: fileRow.y === editRow.y
+                    contentItem.visible: fileRow.y == editRow.y
                 }
             }
 
@@ -264,7 +265,7 @@ ApplicationWindow {
                     action: pasteAction
                 }
                 ToolSeparator {
-                    contentItem.visible: editRow.y === formatRow.y
+                    contentItem.visible: editRow.y == formatRow.y
                 }
             }
 
@@ -347,7 +348,7 @@ ApplicationWindow {
                     }
                 }
                 ToolSeparator {
-                    contentItem.visible: formatRow.y === alignRow.y
+                    contentItem.visible: formatRow.y == alignRow.y
                 }
             }
 
@@ -421,7 +422,6 @@ ApplicationWindow {
         property alias underline: document.font.underline
         property alias strikeout: document.font.strikeout
         property alias size: document.font.pointSize
-
         Component.onCompleted: {
             if (Qt.application.arguments.length === 2)
                 document.load("file:" + Qt.application.arguments[1]);
@@ -441,9 +441,14 @@ ApplicationWindow {
     Flickable {
         id: flickable
         flickableDirection: Flickable.VerticalFlick
-        anchors.fill: parent
+        //anchors.fill: parent
+        x : Screen.width / 2 - width / 2
+        y : Screen.height / 2 - height / 2
 
+        implicitHeight: parent.height * 1.1
+        implicitWidth: parent.height/11 * 8.5 * 1.1
         TextArea.flickable: TextArea {
+
             id: textArea
             textFormat: Qt.RichText
             wrapMode: TextArea.Wrap
@@ -457,8 +462,11 @@ ApplicationWindow {
             rightPadding: 6
             topPadding: 0
             bottomPadding: 0
-            background: null
 
+
+            //adds white background
+            background: Rectangle{
+            }
             MouseArea {
                 acceptedButtons: Qt.RightButton
                 anchors.fill: parent
@@ -469,6 +477,7 @@ ApplicationWindow {
                 Qt.openUrlExternally(link)
             }
         }
+
 
         ScrollBar.vertical: ScrollBar {}
     }
