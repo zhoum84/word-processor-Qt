@@ -32,6 +32,7 @@ qt_add_qml_module(texteditorexample
         "+touch/texteditor.html"
         "fonts/fontello.ttf"
         "images/qt-logo.png"
+        RESOURCES .gitignore
 
 )
 
