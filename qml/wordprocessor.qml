@@ -498,12 +498,18 @@ ApplicationWindow {
                     checked: document.alignment == Qt.AlignJustify
                     onClicked: document.alignment = Qt.AlignJustify
                 }
-//                Rectangle {
-//                width: 48
-//                height: 48
-//                color: "#ea7025"
-//                border.color: Qt.lighter(color)
-//                }
+                ToolSeparator {
+                    contentItem.visible: formatRow.y == alignRow.y
+                }
+                ToolButton {
+                    id: listBulletButton
+                    text: "\uF0CA" // icon-list-bullet
+                    font.family: "fontello"
+                    focusPolicy: Qt.TabFocus
+                    checkable: true
+                    checked: document.list
+                    onClicked: document.list = !document.list
+                }
             }
         }
     }
