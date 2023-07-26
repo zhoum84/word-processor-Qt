@@ -349,4 +349,24 @@ void DocumentHandler::setItalic(bool italic)
     emit italicChanged();
 }
 
+bool DocumentHandler::list() const{
+
+    const QTextCursor cursor = textCursor();
+    QTextList *list = cursor.currentList();
+    return list;
+}
+
+void DocumentHandler::setList(bool list){
+
+
+    QTextListFormat::Style style = QTextListFormat::ListDisc;
+    QTextCursor cursor = textCursor();
+    QTextListFormat listFormat;
+    listFormat.setStyle( style );
+    cursor.createList( listFormat );
+
+    emit listChanged();
+
+}
+
 #include "moc_documenthandler.cpp"
