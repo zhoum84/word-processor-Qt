@@ -25,12 +25,14 @@ qt_add_qml_module(texteditorexample
     QML_FILES
         "qml/+touch/texteditor.qml"
         "qml/wordprocessor.qml"
+        "qml/PageBreak.qml"
         "qml/page.qml"
     RESOURCES
         "texteditor.html"
         "+touch/texteditor.html"
         "fonts/fontello.ttf"
         "images/qt-logo.png"
+
 )
 
 target_link_libraries(texteditorexample PUBLIC
@@ -48,7 +50,7 @@ endif()
 
 if(CMAKE_CROSSCOMPILING)
     target_compile_definitions(texteditorexample PUBLIC
-        QT_EXTRA_FILE_SELECTOR="touch"
+        QT_EXTRA_FILE="touch"
     )
 endif()
 

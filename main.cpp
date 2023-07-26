@@ -31,8 +31,8 @@ int main(int argc, char *argv[])
     qmlRegisterType<DocumentHandler>("my.wordprocessor", 1, 0, "DocumentHandler");
 
     QStringList selectors;
-#ifdef QT_EXTRA_FILE_SELECTOR
-    selectors += QT_EXTRA_FILE_SELECTOR;
+#ifdef QT_EXTRA_FILE
+    selectors += QT_EXTRA_FILE;
 #else
     if (app.arguments().contains("-touch"))
         selectors += "touch";

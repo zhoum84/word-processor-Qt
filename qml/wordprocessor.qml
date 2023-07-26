@@ -232,6 +232,13 @@ ApplicationWindow {
                     font.family: "fontello"
                     action: openAction
                     focusPolicy: Qt.TabFocus
+                    ToolTip {
+                        parent: openButton
+                        visible: openButton.hovered
+                        text: qsTr("<b>Open (Ctrl+O)</b><br>This will open a file from your<br>file explorer.")
+                        delay: 500
+                        x: 0
+                    }
                 }
                 ToolSeparator {
                     contentItem.visible: fileRow.y == editRow.y
@@ -247,14 +254,28 @@ ApplicationWindow {
                     focusPolicy: Qt.TabFocus
                     enabled: textArea.selectedText
                     action: copyAction
+                    ToolTip {
+                        parent: copyButton
+                        visible: copyButton.hovered
+                        text: qsTr("<b>Copy (Ctrl+C)</b><br>This will copy selected content<br>to the clipboard.")
+                        delay: 500
+                        x: 0
+                    }
                 }
                 ToolButton {
                     id: cutButton
-                    text: "\uE802" // icon-scissors
+                    text: "\uE80A" // icon-scissors
                     font.family: "fontello"
                     focusPolicy: Qt.TabFocus
                     enabled: textArea.selectedText
                     action: cutAction
+                    ToolTip {
+                        parent: cutButton
+                        visible: cutButton.hovered
+                        text: qsTr("<b>Cut (Ctrl+X)</b><br>This will delete selected content and<br>add it to the clipboard.")
+                        delay: 500
+                        x: 0
+                    }
                 }
                 ToolButton {
                     id: pasteButton
@@ -263,7 +284,15 @@ ApplicationWindow {
                     focusPolicy: Qt.TabFocus
                     enabled: textArea.canPaste
                     action: pasteAction
+                    ToolTip {
+                        parent: pasteButton
+                        visible: pasteButton.hovered
+                        text: qsTr("<b>Paste (Ctrl+V)</b><br>This will paste content from your<br>clipboard to the document.")
+                        delay: 500
+                        x: 0
+                    }
                 }
+
                 ToolSeparator {
                     contentItem.visible: editRow.y == formatRow.y
                 }
@@ -273,21 +302,35 @@ ApplicationWindow {
                 id: formatRow
                 ToolButton {
                     id: boldButton
-                    text: "\uE800" // icon-bold
+                    text: "\uE805" // icon-bold
                     font.family: "fontello"
                     focusPolicy: Qt.TabFocus
                     checkable: true
                     checked: document.bold
                     action: boldAction
+                    ToolTip {
+                        parent: boldButton
+                        visible: boldButton.hovered
+                        text: qsTr("<b>Bold (Ctrl+B)</b><br>This will make text bold.")
+                        delay: 500
+                        x: 0
+                    }
                 }
                 ToolButton {
                     id: italicButton
-                    text: "\uE801" // icon-italic
+                    text: "\uE807" // icon-italic
                     font.family: "fontello"
                     focusPolicy: Qt.TabFocus
                     checkable: true
                     checked: document.italic
                     action: italicAction
+                    ToolTip {
+                        parent: italicButton
+                        visible: italicButton.hovered
+                        text: qsTr("<b>Italic (Ctrl+I)</b><br>This will italicize text.")
+                        delay: 500
+                        x: 0
+                    }
                 }
                 ToolButton {
                     id: underlineButton
@@ -297,19 +340,33 @@ ApplicationWindow {
                     checkable: true
                     checked: document.underline
                     action: underlineAction
+                    ToolTip {
+                        parent: underlineButton
+                        visible: underlineButton.hovered
+                        text: qsTr("<b>Underline (Ctrl+U)</b><br>This will underline selected text.")
+                        delay: 500
+                        x: 0
+                    }
                 }
                 ToolButton {
-                    id: strikeoutButton
-                    text: "\uF0CC"
+                    id: strikethroughButton
+                    text: "\uF0CC" // icon-strike
                     font.family: "fontello"
                     focusPolicy: Qt.TabFocus
                     checkable: true
                     checked: document.strikeout
                     onClicked: document.strikeout = !document.strikeout
+                    ToolTip {
+                        parent: strikethroughButton
+                        visible: strikethroughButton.hovered
+                        text: qsTr("<b>Strikethrough</b><br>This will cross out text by drawing<br>a line through it.")
+                        delay: 500
+                        x: 0
+                    }
                 }
                 ToolButton {
                     id: fontFamilyToolButton
-                    text: qsTr("\uE808") // icon-font
+                    text: qsTr("\uE80B") // icon-font
                     font.family: "fontello"
                     font.bold: document.bold
                     font.italic: document.italic
@@ -319,6 +376,13 @@ ApplicationWindow {
                     onClicked: function () {
                         fontDialog.selectedFont = document.font
                         fontDialog.open()
+                    }
+                    ToolTip {
+                        parent: fontFamilyToolButton
+                        visible: fontFamilyToolButton.hovered
+                        text: qsTr("<b>Font Family</b><br>This will change the font of<br>your text.")
+                        delay: 500
+                        x: 0
                     }
                 }
                 ToolButton {
@@ -330,7 +394,13 @@ ApplicationWindow {
                         colorDialog.selectedColor = document.textColor
                         colorDialog.open()
                     }
-
+                    ToolTip {
+                        parent: textColorButton
+                        visible: textColorButton.hovered
+                        text: qsTr("<b>Font Color</b><br>This will change the color of<br>your text.")
+                        delay: 500
+                        x: 0
+                    }
                     Rectangle {
                         width: aFontMetrics.width + 3
                         height: 2
@@ -356,55 +426,84 @@ ApplicationWindow {
                 id: alignRow
                 ToolButton {
                     id: alignLeftButton
-                    text: "\uE803" // icon-align-left
+                    text: "\uE801" // icon-align-left
                     font.family: "fontello"
                     focusPolicy: Qt.TabFocus
                     checkable: true
                     checked: document.alignment == Qt.AlignLeft
                     onClicked: document.alignment = Qt.AlignLeft
+                    ToolTip {
+                        parent: alignLeftButton
+                        visible: alignLeftButton.hovered
+                        text: qsTr("<b>Align Left</b><br>This will align selected<br>content to the left margin.")
+                        delay: 500
+                        x: 0
+                    }
+
                 }
                 ToolButton {
                     id: alignCenterButton
-                    text: "\uE804" // icon-align-center
+                    text: "\uE802" // icon-align-center
                     font.family: "fontello"
                     focusPolicy: Qt.TabFocus
                     checkable: true
                     checked: document.alignment == Qt.AlignHCenter
                     onClicked: document.alignment = Qt.AlignHCenter
+                    ToolTip {
+                        parent: alignCenterButton
+                        visible: alignCenterButton.hovered
+                        text: qsTr("<b>Align Center</b><br>This will align selected<br>content to the center")
+                        delay: 500
+                        x: 0
+                    }
                 }
                 ToolButton {
                     id: alignRightButton
-                    text: "\uE805" // icon-align-right
+                    text: "\uE803" // icon-align-right
                     font.family: "fontello"
                     focusPolicy: Qt.TabFocus
                     checkable: true
                     checked: document.alignment == Qt.AlignRight
                     onClicked: document.alignment = Qt.AlignRight
+                    ToolTip {
+                        parent: alignRightButton
+                        visible: alignRightButton.hovered
+                        text: qsTr("<b>Align Right</b><br>This will align selected<br>content to the right margin.")
+                        delay: 500
+                        x: 0
+                    }
                 }
                 ToolButton {
                     id: alignJustifyButton
-                    text: "\uE806" // icon-align-justify
+                    text: "\uE804" // icon-align-justify
                     font.family: "fontello"
                     focusPolicy: Qt.TabFocus
                     checkable: true
                     checked: document.alignment == Qt.AlignJustify
                     onClicked: document.alignment = Qt.AlignJustify
+                    ToolTip {
+                        parent: alignJustifyButton
+                        visible: alignJustifyButton.hovered
+                        text: qsTr("<b>Justify</b><br>This will justify selected<br>content evenly between<br>margins.")
+                        delay: 500
+                        x: 0
+                    }
                 }
                 ToolButton {
                     id: alignJustifyButton2
-                    text: "\uE806" // icon-align-justify
+                    text: "\uE804" // icon-align-justify
                     font.family: "fontello"
                     focusPolicy: Qt.TabFocus
                     checkable: true
                     checked: document.alignment == Qt.AlignJustify
                     onClicked: document.alignment = Qt.AlignJustify
                 }
-                Rectangle {
-                width: 48
-                height: 48
-                color: "#ea7025"
-                border.color: Qt.lighter(color)
-                }
+//                Rectangle {
+//                width: 48
+//                height: 48
+//                color: "#ea7025"
+//                border.color: Qt.lighter(color)
+//                }
             }
         }
     }
@@ -441,40 +540,53 @@ ApplicationWindow {
     Flickable {
         id: flickable
         flickableDirection: Flickable.VerticalFlick
-//        anchors.top: parent
-//        anchors.right: parent.right/3
-//        anchors.left: parent.left/3
-//        anchors.bottom: parent
-        //anchors.fill: parent
-        x : Screen.width / 2 - width / 2
-        y : Screen.height / 2 - height / 2
-
-        implicitHeight: parent.height * 1.1
-        implicitWidth: parent.height/11 * 8.5 * 1.1
-        contentHeight: TextArea.implicitHeight * 1.5
+        anchors.fill: parent
+        anchors.leftMargin: Screen.width/4
+        anchors.rightMargin: Screen.width/4
+        anchors.topMargin: 10
+        anchors.bottomMargin: 10
+//        implicitHeight: parent.height * 1.25
+//        implicitWidth: parent.height/11 * 8.5 * 1.25
+        //contentHeight: TextArea.implicitHeight
         TextArea.flickable: TextArea {
-            //clip:true
+            clip:true
             id: textArea
             textFormat: Qt.RichText
             wrapMode: TextArea.Wrap
             focus: true
             selectByMouse: true
+            visible: true
             persistentSelection: true
             // Different styles have different padding and background
             // decorations, but since this editor is almost taking up the
             // entire window, we don't need them.
-            leftPadding: 0
-            rightPadding: 0
+            leftPadding: textArea.width/16
+            rightPadding: textArea.width/16
             topPadding: 0
             bottomPadding: 0
 
+            onContentHeightChanged: function(){
 
+                if(contentHeight > parent.implicitHeight){
+                    //temp = Qt.createComponent(PageBreak)
+                    page = PageBreak.createObject(flickable)
+
+                }
+            }
 
 
             MouseArea {
                 acceptedButtons: Qt.RightButton
                 anchors.fill: parent
                 onClicked: contextMenu.open()
+            }
+            Button {
+                anchors.bottom: parent.bottom;
+                anchors.horizontalCenter: parent.horizontalCenter;
+                text: "Scale flickArea"
+                onClicked: {
+                    rect.scale += 0.2;
+                }
             }
 
             onLinkActivated: function (link) {
@@ -484,10 +596,6 @@ ApplicationWindow {
 
 
         ScrollBar.vertical: ScrollBar {
-            parent: flickable.parent
-            anchors.top: flickable.top
-            anchors.left: flickable.right
-            anchors.bottom: flickable.bottom
 
             //snapMode: "NoSnap"
 //            contentItem: Rectangle {
@@ -536,7 +644,10 @@ ApplicationWindow {
             }
         }
     }
-
+//    Window{
+//        id: test
+//        visible: true
+//    }
     onClosing: function (close) {
         if (document.modified) {
             quitDialog.open()
