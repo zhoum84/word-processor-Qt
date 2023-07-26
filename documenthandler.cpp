@@ -10,6 +10,7 @@
 #include <QQmlFile>
 #include <QQmlFileSelector>
 #include <QQuickTextDocument>
+#include <QTextList>
 #include <QTextCharFormat>
 #include <QStringDecoder>
 #include <QTextDocument>
@@ -356,15 +357,25 @@ bool DocumentHandler::list() const{
     return list;
 }
 
+// need to improve
 void DocumentHandler::setList(bool list){
-
-
     QTextListFormat::Style style = QTextListFormat::ListDisc;
     QTextCursor cursor = textCursor();
     QTextListFormat listFormat;
-    listFormat.setStyle( style );
-    cursor.createList( listFormat );
+    QTextList *listed = cursor.currentList();
+    if(!listed){
+        listFormat.setStyle( style );
+        cursor.createList( listFormat );
+    }
+    else{
+        listFormat.setIndent(0);
+        listFormat.setStyle( style );
+        listed->setFormat( listFormat );
+        for( int i = listed->count() - 1; i >= 0 ; --i )
+            listed->removeItem( i );
 
+
+    }
     emit listChanged();
 
 }
