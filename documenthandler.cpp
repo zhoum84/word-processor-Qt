@@ -350,31 +350,48 @@ void DocumentHandler::setItalic(bool italic)
     emit italicChanged();
 }
 
-bool DocumentHandler::list() const{
+int DocumentHandler::list() const{
 
     const QTextCursor cursor = textCursor();
     QTextList *list = cursor.currentList();
-    return list;
+
+
+    //QTextListFormat::Style style = QTextListFormat::ListDisc;
+
+    if(list){
+        QTextListFormat::Style style2 = list->format().style();
+        return style2;
+    }
+    else
+        return 0;
 }
 
 // need to improve
-void DocumentHandler::setList(bool list){
-    QTextListFormat::Style style = QTextListFormat::ListDisc;
+void DocumentHandler::setList(const int list){
     QTextCursor cursor = textCursor();
     QTextListFormat listFormat;
     QTextList *listed = cursor.currentList();
     if(!listed){
-        listFormat.setStyle( style );
+        listFormat.setStyle( QTextListFormat::Style(list));
         cursor.createList( listFormat );
     }
-    else{
+    else
+    {
         listFormat.setIndent(0);
-        listFormat.setStyle( style );
-        listed->setFormat( listFormat );
-        for( int i = listed->count() - 1; i >= 0 ; --i )
+        listFormat.setStyle(QTextListFormat::Style(list) );
+        qDebug() <<cursor.selectedText();
+        if(cursor.selectedText().isEmpty())
+        {
+            qDebug()<<"lol";
+            listed->setFormat(listFormat);
+            listed->removeItem((cursor.positionInBlock()));
+        }
+        else
+        {
+            listed->setFormat( listFormat );
+            for( int i = listed->count() - 1; i >= 0 ; --i )
             listed->removeItem( i );
-
-
+        }
     }
     emit listChanged();
 

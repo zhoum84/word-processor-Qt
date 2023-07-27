@@ -501,14 +501,34 @@ ApplicationWindow {
                 ToolSeparator {
                     contentItem.visible: formatRow.y == alignRow.y
                 }
-                ToolButton {
+                ToolButton{
                     id: listBulletButton
+
                     text: "\uF0CA" // icon-list-bullet
                     font.family: "fontello"
                     focusPolicy: Qt.TabFocus
                     checkable: true
-                    checked: document.list
-                    onClicked: document.list = !document.list
+                    checked: document.list == -1
+                    onClicked: document.list = -1
+
+                    ToolTip {
+                        parent: listBulletButton
+                        visible: listBulletButton.hovered
+                        text: qsTr("<b>Bulleted List</b><br>This will create a bulleted<br>list.<br>")
+                        delay: 500
+                        x: 0
+                    }
+
+                }
+                ToolButton {
+                    id: numberedBulletButton
+                    text: "\uF0CB" // icon-list-numbered
+                    font.family: "fontello"
+                    focusPolicy: Qt.TabFocus
+                    checkable: true
+                    checked: document.list == -4
+                    onClicked: document.list = -4
+
                 }
             }
         }
