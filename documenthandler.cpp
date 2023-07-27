@@ -161,6 +161,9 @@ void DocumentHandler::load(const QUrl &fileUrl)
             if (QTextDocument *doc = textDocument()) {
                 doc->setBaseUrl(path.adjusted(QUrl::RemoveFilename));
                 doc->setModified(false);
+                QTextOption textOptions = doc->defaultTextOption();
+                textOptions.setTabStopDistance(35);
+                doc->setDefaultTextOption(textOptions);
                 if (mime.inherits("text/markdown"))
                 {
                     emit loaded(QString::fromUtf8(data), Qt::MarkdownText);
@@ -378,19 +381,24 @@ void DocumentHandler::setList(const int list){
     else
     {
         listFormat.setIndent(0);
-        listFormat.setStyle(QTextListFormat::Style(list) );
-        qDebug() <<cursor.selectedText();
+        listFormat.setStyle(QTextListFormat::Style(0) );
         if(cursor.selectedText().isEmpty())
         {
+            qDebug() <<cursor.selectedText();
             qDebug()<<"lol";
             listed->setFormat(listFormat);
-            listed->removeItem((cursor.positionInBlock()));
+            //int count = cursor.block().blockNumber() - 3;
+            int count = listed->count() - 2;
+            qDebug() << listed->itemNumber(cursor.block());
+            listed->removeItem(count);
+
         }
         else
         {
+            qDebug() << "xd";
             listed->setFormat( listFormat );
-            for( int i = listed->count() - 1; i >= 0 ; --i )
-            listed->removeItem( i );
+            //for( int i = listed->count() - 1; i >= 0 ; --i )
+                listed->removeItem( listed->count() - 1);
         }
     }
     emit listChanged();
