@@ -179,7 +179,7 @@ ApplicationWindow {
         id: openDialog
         fileMode: FileDialog.OpenFile
         selectedNameFilter.index: 1
-        nameFilters: ["Available Text file formats (*.txt; *.html; *htm; *md; *.markdown; *.docx; *.docm; *doc)","Text files (*.txt)", "HTML files (*.html *.htm)", "Markdown files (*.md *.markdown)", "Microsoft Word Documents (*.docx; *.docm; *doc)"]
+        nameFilters: ["Available Text file formats (*.txt; *.html; *htm; *md; *.markdown;)","Text files (*.txt)", "HTML files (*.html *.htm)", "Markdown files (*.md *.markdown)"]
         currentFolder: StandardPaths.writableLocation(StandardPaths.DocumentsLocation)
         onAccepted: document.load(selectedFile)
     }
@@ -188,7 +188,7 @@ ApplicationWindow {
         id: saveDialog
         fileMode: FileDialog.SaveFile
         defaultSuffix: document.fileType
-        nameFilters: openDialog.nameFilters
+        nameFilters: ["Available Text file formats (*.txt; *.html; *htm; *md; *.markdown; *.docx; *.docm; *doc)","Text files (*.txt)", "HTML files (*.html *.htm)", "Markdown files (*.md *.markdown)", "Microsoft Word Documents (*.docx; *.docm; *doc)"]
         selectedNameFilter.index: document.fileType === "txt" ? 0 : 1
         currentFolder: StandardPaths.writableLocation(StandardPaths.DocumentsLocation)
         onAccepted: document.saveAs(selectedFile)
@@ -204,7 +204,6 @@ ApplicationWindow {
         selectedColor: "black"
         onAccepted: document.textColor = selectedColor
     }
-
     MessageDialog {
         title: qsTr("Error")
         id: errorDialog
@@ -489,15 +488,6 @@ ApplicationWindow {
                         x: 0
                     }
                 }
-                ToolButton {
-                    id: alignJustifyButton2
-                    text: "\uE804" // icon-align-justify
-                    font.family: "fontello"
-                    focusPolicy: Qt.TabFocus
-                    checkable: true
-                    checked: document.alignment == Qt.AlignJustify
-                    onClicked: document.alignment = Qt.AlignJustify
-                }
                 ToolSeparator {
                     contentItem.visible: formatRow.y == alignRow.y
                 }
@@ -529,7 +519,67 @@ ApplicationWindow {
                     checked: document.list == -4
                     onClicked: document.list = -4
 
+                    ToolTip {
+                        parent: numberedBulletButton
+                        visible: numberedBulletButton.hovered
+                        text: qsTr("<b>Numbered List</b><br>This will create a numbered<br>list with digits ascending.<br>")
+                        delay: 500
+                        x: 0
+                    }
                 }
+
+                ToolSeparator {
+                    contentItem.visible: formatRow.y == alignRow.y
+                }
+
+            }
+
+            Row{
+                ComboBox{
+                    width: 200
+                    y: 2.5
+                    id: fontBox
+                    model: Qt.fontFamilies()
+                    editable: true
+                    delegate: ItemDelegate {
+                        height: 30;
+                        width: fontBox.width
+                        Text {
+                            anchors.centerIn: parent
+                            text: modelData;
+                        }
+                        background: Rectangle{
+                            border.color: "black"
+                            border.width: 1
+                        }
+                    }
+                    onActivated: document.font = fontBox.currentText
+                    onAccepted: document.font = fontBox.currentText
+                }
+
+                ComboBox{
+                    width: 40
+                    x: 5
+                    y: 2.5
+                    id: fontSizeBox
+                    model: 72
+                    editable: true
+                    delegate: ItemDelegate {
+                        text: index + 1
+                        background: Rectangle{
+                            border.color: "black"
+                            border.width: 0.5
+                        }
+                        height: 30;
+                        width: fontSizeBox.width
+                    }
+                    //displayText: currentIndex + 1
+
+                    onActivated: document.fontSize = fontSizeBox.currentText
+                    onAccepted: document.fontSize = fontSizeBox.currentText
+                    Component.onCompleted: fontSizeBox.currentIndex = document.fontSize + 1
+                }
+
             }
         }
     }
@@ -546,7 +596,7 @@ ApplicationWindow {
         property alias italic: document.font.italic
         property alias underline: document.font.underline
         property alias strikeout: document.font.strikeout
-        property alias size: document.font.pointSize
+
         Component.onCompleted: {
             if (Qt.application.arguments.length === 2)
                 document.load("file:" + Qt.application.arguments[1]);
@@ -571,9 +621,7 @@ ApplicationWindow {
         anchors.rightMargin: Screen.width/4
         anchors.topMargin: 10
         anchors.bottomMargin: 10
-//        implicitHeight: parent.height * 1.25
-//        implicitWidth: parent.height/11 * 8.5 * 1.25
-        //contentHeight: TextArea.implicitHeight
+
         TextArea.flickable: TextArea {
             clip:true
             id: textArea
@@ -583,22 +631,25 @@ ApplicationWindow {
             selectByMouse: true
             visible: true
             persistentSelection: true
-            // Different styles have different padding and background
-            // decorations, but since this editor is almost taking up the
-            // entire window, we don't need them.
             leftPadding: textArea.width/16
             rightPadding: textArea.width/16
             topPadding: 0
             bottomPadding: 0
-
-            onContentHeightChanged: function(){
-
-                if(contentHeight > parent.implicitHeight){
-                    //temp = Qt.createComponent(PageBreak)
-                    page = PageBreak.createObject(flickable)
-
-                }
+            onPressed: function() {
+                fontBox.currentIndex = fontBox.find(document.family)
+                fontSizeBox.currentIndex = document.fontSize + 1
             }
+
+
+
+//            onContentHeightChanged: function(){
+
+//                if(contentHeight > parent.implicitHeight){
+//                    //temp = Qt.createComponent(PageBreak)
+//                    page = PageBreak.createObject(flickable)
+
+//                }
+//            }
 
 
             MouseArea {
@@ -619,18 +670,7 @@ ApplicationWindow {
                 Qt.openUrlExternally(link)
             }
         }
-
-
-        ScrollBar.vertical: ScrollBar {
-
-            //snapMode: "NoSnap"
-//            contentItem: Rectangle {
-//                implicitWidth: 20
-//                implicitHeight: 20
-//                //color: "blue"
-//            }
-
-        }
+        ScrollBar.vertical: ScrollBar {}
     }
 
     Platform.Menu {

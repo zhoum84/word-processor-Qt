@@ -246,8 +246,8 @@ QTextDocument *DocumentHandler::textDocument() const
 void DocumentHandler::mergeFormatOnWordOrSelection(const QTextCharFormat &format)
 {
     QTextCursor cursor = textCursor();
-    if (!cursor.hasSelection())
-        cursor.select(QTextCursor::WordUnderCursor);
+//    if (!cursor.hasSelection())
+//        cursor.select(QTextCursor::WordUnderCursor);
     cursor.mergeCharFormat(format);
 }
 
@@ -271,17 +271,56 @@ QFont DocumentHandler::font() const
     return format.font();
 }
 
+//change signature later
 void DocumentHandler::setFont(const QFont & font){
 
     QTextCursor cursor = textCursor();
     if (!cursor.isNull() && cursor.charFormat().font() == font)
         return;
 
+    auto temp = font;
+
+    // maintain document font size
+    if(font.pointSize() > 0)
+    {
+        temp.setPointSize(cursor.charFormat().font().pointSize());
+    }
+    else if(font.pixelSize() > 0){
+        temp.setPixelSize(cursor.charFormat().font().pixelSize());
+    }
+
     QTextCharFormat format;
-    format.setFont(font);
+    format.setFont(temp);
+
     mergeFormatOnWordOrSelection(format);
 
     emit fontChanged();
+}
+
+int DocumentHandler::fontSize() const{
+    QTextCursor cursor = textCursor();
+    if (cursor.isNull())
+        return m_document->textDocument()->defaultFont().pointSize();
+    return cursor.charFormat().fontPointSize();
+
+}
+
+void DocumentHandler::setFontSize(int size){
+    QTextCursor cursor = textCursor();
+
+    if(size < 1)
+        return;
+    if (!cursor.isNull() && cursor.charFormat().fontPointSize() == size)
+        return;
+
+    auto temp = cursor.charFormat().font();
+    temp.setPointSize(size);
+    QTextCharFormat format;
+    format.setFont(temp);
+
+    mergeFormatOnWordOrSelection(format);
+
+    emit fontSizeChanged();
 }
 
 bool DocumentHandler::bold() const

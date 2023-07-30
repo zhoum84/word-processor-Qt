@@ -28,6 +28,7 @@ class DocumentHandler : public QObject
     Q_PROPERTY(Qt::Alignment alignment READ alignment WRITE setAlignment NOTIFY alignmentChanged)
 
     Q_PROPERTY(QFont font READ font WRITE setFont NOTIFY fontChanged)
+    Q_PROPERTY(int fontSize READ fontSize WRITE setFontSize NOTIFY fontSizeChanged)
 
     Q_PROPERTY(bool bold READ bold WRITE setBold NOTIFY boldChanged)
     Q_PROPERTY(bool underline READ underline WRITE setUnderline NOTIFY underlineChanged)
@@ -65,6 +66,9 @@ public:
     QFont font() const;
     void setFont(const QFont & font);
 
+    int fontSize() const;
+    void setFontSize(int size);
+
     bool bold() const;
     void setBold(bool bold);
 
@@ -95,6 +99,8 @@ Q_SIGNALS:
     void selectionEndChanged();
 
     void fontChanged();
+    void fontSizeChanged();
+
     void boldChanged();
     void underlineChanged();
     void italicChanged();
