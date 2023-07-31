@@ -1,4 +1,4 @@
-// Copyright (C) 2021 The Qt Company Ltd.
+// Copyright (C) 2023 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 
 import QtQuick
@@ -10,23 +10,19 @@ import Qt.labs.platform as Platform
 
 import my.wordprocessor
 
-// TODO:
-// - make designer-friendly
-
 ApplicationWindow {
     id: window
     width: Screen.desktopAvailableWidth
     height: Screen.desktopAvailableHeight
     visibility: "Maximized"
     visible: true
-    title: document.fileName + " - Text Editor Example"
+    title: document.fileName + " - Word Processor"
 
     Component.onCompleted: {
         x = Screen.width / 2 - width / 2
         y = Screen.height / 2 - height / 2
 
     }
-
 
     Action {
         id: openAction
@@ -498,7 +494,7 @@ ApplicationWindow {
                     font.family: "fontello"
                     focusPolicy: Qt.TabFocus
                     checkable: true
-                    checked: document.list == -1
+                    checked: document.list === -1
                     onClicked: document.list = -1
 
                     ToolTip {
@@ -516,7 +512,7 @@ ApplicationWindow {
                     font.family: "fontello"
                     focusPolicy: Qt.TabFocus
                     checkable: true
-                    checked: document.list == -4
+                    checked: document.list === -4
                     onClicked: document.list = -4
 
                     ToolTip {
@@ -620,11 +616,13 @@ ApplicationWindow {
         anchors.leftMargin: Screen.width/4
         anchors.rightMargin: Screen.width/4
         anchors.topMargin: 10
-        anchors.bottomMargin: 10
 
+        property int currentPage: 1
+        property int pageCount: 1
+        property int pageSize: 1080
         TextArea.flickable: TextArea {
-            clip:true
             id: textArea
+            clip:true
             textFormat: Qt.RichText
             wrapMode: TextArea.Wrap
             focus: true
@@ -633,43 +631,35 @@ ApplicationWindow {
             persistentSelection: true
             leftPadding: textArea.width/16
             rightPadding: textArea.width/16
-            topPadding: 0
-            bottomPadding: 0
+
+
             onPressed: function() {
                 fontBox.currentIndex = fontBox.find(document.family)
                 fontSizeBox.currentIndex = document.fontSize + 1
             }
 
-
-
-//            onContentHeightChanged: function(){
-
-//                if(contentHeight > parent.implicitHeight){
-//                    //temp = Qt.createComponent(PageBreak)
-//                    page = PageBreak.createObject(flickable)
-
-//                }
-//            }
-
+            onContentHeightChanged: {
+                textArea.height = textArea.contentHeight
+                if(textArea.contentHeight >= flickable.height && flickable.height > 0 )
+                    flickable.pageCount = Math.ceil(textArea.contentHeight / flickable.pageSize);
+            }
 
             MouseArea {
+                id: moveable
                 acceptedButtons: Qt.RightButton
                 anchors.fill: parent
                 onClicked: contextMenu.open()
-            }
-            Button {
-                anchors.bottom: parent.bottom;
-                anchors.horizontalCenter: parent.horizontalCenter;
-                text: "Scale flickArea"
-                onClicked: {
-                    rect.scale += 0.2;
-                }
             }
 
             onLinkActivated: function (link) {
                 Qt.openUrlExternally(link)
             }
         }
+
+        onMovementEnded: function() {
+            flickable.currentPage = Math.ceil(contentY + moveable.mouseY)/flickable.pageSize + 1;
+        }
+
         ScrollBar.vertical: ScrollBar {}
     }
 
@@ -714,6 +704,16 @@ ApplicationWindow {
 //        id: test
 //        visible: true
 //    }
+    footer: TextArea{
+        height: 20
+        text: "Page " + flickable.currentPage + " of " + flickable.pageCount + " "+ Qt.locale().nativeLanguageName + " (" + Qt.locale().nativeTerritoryName + ") " + " words"
+        color: "black"
+        background: Rectangle {
+            color: "whitesmoke"
+            border.color: "lightgray"
+        }
+
+    }
     onClosing: function (close) {
         if (document.modified) {
             quitDialog.open()

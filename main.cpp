@@ -16,7 +16,7 @@
 
 int main(int argc, char *argv[])
 {
-    QGuiApplication::setApplicationName("Text Editor");
+    QGuiApplication::setApplicationName("Word Processor");
     QGuiApplication::setOrganizationName("QtProject");
 
 #ifdef QT_WIDGETS_LIB
