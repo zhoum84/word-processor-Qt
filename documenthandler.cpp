@@ -33,12 +33,15 @@ QQuickTextDocument *DocumentHandler::document() const
 
 void DocumentHandler::setDocument(QQuickTextDocument *document)
 {
+    const QSizeF page(612,792);
     if (document == m_document)
         return;
 
     if (m_document)
         disconnect(m_document->textDocument(), &QTextDocument::modificationChanged, this, &DocumentHandler::modifiedChanged);
     m_document = document;
+
+    m_document->textDocument()->setPageSize(page);
     if (m_document)
         connect(m_document->textDocument(), &QTextDocument::modificationChanged, this, &DocumentHandler::modifiedChanged);
     emit documentChanged();
@@ -118,6 +121,9 @@ void DocumentHandler::setAlignment(Qt::Alignment alignment)
     format.setAlignment(alignment);
     QTextCursor cursor = textCursor();
     cursor.mergeBlockFormat(format);
+
+    qDebug() << m_document->textDocument()->pageCount();
+    qDebug() << m_document->textDocument()->pageSize();
     emit alignmentChanged();
 }
 
@@ -164,6 +170,8 @@ void DocumentHandler::load(const QUrl &fileUrl)
                 QTextOption textOptions = doc->defaultTextOption();
                 textOptions.setTabStopDistance(35);
                 doc->setDefaultTextOption(textOptions);
+                const QSizeF page(612,792);
+                doc->setPageSize(page);
                 if (mime.inherits("text/markdown"))
                 {
                     emit loaded(QString::fromUtf8(data), Qt::MarkdownText);
