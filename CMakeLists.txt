@@ -2,25 +2,25 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 cmake_minimum_required(VERSION 3.16)
-project(texteditor LANGUAGES CXX)
+project(wordprocessor LANGUAGES CXX)
 
 set(CMAKE_AUTOMOC ON)
 
-if(NOT DEFINED INSTALL_EXAMPLESDIR)
-    set(INSTALL_EXAMPLESDIR "examples")
+if(NOT DEFINED INSTALL_DIR)
+    set(INSTALL_DIR "examples")
 endif()
 
-set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/quickcontrols/texteditor")
+set(INSTALL_DIR "${INSTALL_DIR}/quickcontrols/wordprocessor")
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Quick QuickControls2 OPTIONAL_COMPONENTS Widgets)
 
-qt_add_executable(texteditorexample WIN32 MACOSX_BUNDLE
+qt_add_executable(wordprocessor WIN32 MACOSX_BUNDLE
     documenthandler.cpp
     main.cpp
 )
 
-qt_add_qml_module(texteditorexample
-    URI texteditor
+qt_add_qml_module(wordprocessor
+    URI wordprocessor
     NO_RESOURCE_TARGET_PATH
     QML_FILES
         "qml/+touch/texteditor.qml"
@@ -36,7 +36,7 @@ qt_add_qml_module(texteditorexample
 
 )
 
-target_link_libraries(texteditorexample PUBLIC
+target_link_libraries(wordprocessor PUBLIC
     Qt::Core
     Qt::Gui
     Qt::Quick
@@ -44,19 +44,19 @@ target_link_libraries(texteditorexample PUBLIC
 )
 
 if(TARGET Qt::Widgets)
-    target_link_libraries(texteditorexample PUBLIC
+    target_link_libraries(wordprocessor PUBLIC
         Qt::Widgets
     )
 endif()
 
 if(CMAKE_CROSSCOMPILING)
-    target_compile_definitions(texteditorexample PUBLIC
+    target_compile_definitions(wordprocessor PUBLIC
         QT_EXTRA_FILE="touch"
     )
 endif()
 
-install(TARGETS texteditorexample
-    RUNTIME DESTINATION "${INSTALL_EXAMPLEDIR}"
-    BUNDLE DESTINATION "${INSTALL_EXAMPLEDIR}"
-    LIBRARY DESTINATION "${INSTALL_EXAMPLEDIR}"
+install(TARGETS wordprocessor
+    RUNTIME DESTINATION "${INSTALL_DIR}"
+    BUNDLE DESTINATION "${INSTALL_DIR}"
+    LIBRARY DESTINATION "${INSTALL_DIR}"
 )

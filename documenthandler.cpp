@@ -33,7 +33,6 @@ QQuickTextDocument *DocumentHandler::document() const
 
 void DocumentHandler::setDocument(QQuickTextDocument *document)
 {
-    const QSizeF page(612,792);
     if (document == m_document)
         return;
 
@@ -41,7 +40,6 @@ void DocumentHandler::setDocument(QQuickTextDocument *document)
         disconnect(m_document->textDocument(), &QTextDocument::modificationChanged, this, &DocumentHandler::modifiedChanged);
     m_document = document;
 
-    m_document->textDocument()->setPageSize(page);
     if (m_document)
         connect(m_document->textDocument(), &QTextDocument::modificationChanged, this, &DocumentHandler::modifiedChanged);
     emit documentChanged();
@@ -257,6 +255,28 @@ void DocumentHandler::mergeFormatOnWordOrSelection(const QTextCharFormat &format
 //    if (!cursor.hasSelection())
 //        cursor.select(QTextCursor::WordUnderCursor);
     cursor.mergeCharFormat(format);
+}
+
+uint32_t DocumentHandler::count(){
+    uint32_t size = 0, counter = 0;
+    auto text = m_document->textDocument()->toPlainText();
+
+    if(text.size()==0)
+        return 0;
+
+//    if(!modified() && !initial)
+//        return previousCount;
+
+    if(!text.at(0).isLetterOrNumber())
+        ++counter;
+    for(int i = 1; i<text.length(); ++i)
+    {
+        if(text.at(i-1).isSpace() && text.at(i).isLetterOrNumber())
+            ++counter;
+    }
+    previousCount = counter;
+    initial = false;
+    return counter;
 }
 
 bool DocumentHandler::modified() const

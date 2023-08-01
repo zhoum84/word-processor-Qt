@@ -40,6 +40,7 @@ class DocumentHandler : public QObject
     Q_PROPERTY(QString fileType READ fileType NOTIFY fileUrlChanged)
     Q_PROPERTY(QUrl fileUrl READ fileUrl NOTIFY fileUrlChanged)
 
+    Q_PROPERTY(uint32_t count READ count NOTIFY countChanged)
     Q_PROPERTY(bool modified READ modified WRITE setModified NOTIFY modifiedChanged)
     QML_ELEMENT
 public:
@@ -85,6 +86,8 @@ public:
     QString fileType() const;
     QUrl fileUrl() const;
 
+    uint32_t count();
+
     bool modified() const;
     void setModified(bool m);
 
@@ -114,6 +117,7 @@ Q_SIGNALS:
     void loaded(const QString &text, int format);
     void error(const QString &message);
 
+    void countChanged();
     void modifiedChanged();
 
 private:
@@ -128,6 +132,8 @@ private:
     int m_selectionStart;
     int m_selectionEnd;
 
+    bool initial = true;
+    uint32_t previousCount = 0;
     QUrl m_fileUrl;
 };
 
