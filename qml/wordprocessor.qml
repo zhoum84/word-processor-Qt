@@ -636,6 +636,7 @@ ApplicationWindow {
             onPressed: function() {
                 fontBox.currentIndex = fontBox.find(document.family)
                 fontSizeBox.currentIndex = document.fontSize + 1
+
             }
 
             onContentHeightChanged: {
@@ -653,6 +654,12 @@ ApplicationWindow {
 
             onLinkActivated: function (link) {
                 Qt.openUrlExternally(link)
+            }
+            onEditingFinished: function() {
+                footer.count = document.count
+            }
+            Component.onCompleted: function(){
+                footer.count = document.count
             }
         }
 
@@ -705,9 +712,12 @@ ApplicationWindow {
 //        visible: true
 //    }
     footer: TextArea{
+        id: footer
+        property int count: document.count
         height: 20
-        text: "Page " + flickable.currentPage + " of " + flickable.pageCount + " "+ Qt.locale().nativeLanguageName + " (" + Qt.locale().nativeTerritoryName + ") " + " words"
+        text: "Page " + flickable.currentPage + " of " + flickable.pageCount + "    "+ Qt.locale().nativeLanguageName + " (" + Qt.locale().nativeTerritoryName + ") " + count + " words"
         color: "black"
+        font.pointSize: 10
         background: Rectangle {
             color: "whitesmoke"
             border.color: "lightgray"
