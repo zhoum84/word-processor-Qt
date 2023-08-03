@@ -31,8 +31,10 @@ qt_add_qml_module(wordprocessor
         "texteditor.html"
         "+touch/texteditor.html"
         "fonts/fontello.ttf"
-        "images/qt-logo.png"
-        RESOURCES .gitignore
+        "resources/qt-logo.png"
+    SOURCES
+        dictionary.h
+        dictionary.cpp
 
 )
 

@@ -1,4 +1,4 @@
-// Copyright (C) 2017 The Qt Company Ltd.
+// Copyright (C) 2023 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 
 #ifndef DOCUMENTHANDLER_H
@@ -9,6 +9,8 @@
 #include <QTextCursor>
 #include <QUrl>
 #include <QtQml/qqmlregistration.h>
+
+#include "dictionary.h"
 
 QT_BEGIN_NAMESPACE
 class QTextDocument;
@@ -135,6 +137,8 @@ private:
     bool initial = true;
     uint32_t previousCount = 0;
     QUrl m_fileUrl;
+
+    Dictionary dict;
 };
 
 #endif // DOCUMENTHANDLER_H
