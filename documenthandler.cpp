@@ -1,4 +1,4 @@
-// Copyright (C) 2017 The Qt Company Ltd.
+// Copyright (C) 2023 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 
 #include "documenthandler.h"
@@ -23,7 +23,9 @@ DocumentHandler::DocumentHandler(QObject *parent)
     , m_selectionStart(0)
     , m_selectionEnd(0)
 {
-
+    std::ifstream file("./resources/popular.txt");
+    dict.loadDict(file);
+    qDebug() << "lol";
 }
 
 QQuickTextDocument *DocumentHandler::document() const
