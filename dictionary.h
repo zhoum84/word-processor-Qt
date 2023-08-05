@@ -65,7 +65,7 @@ public:
      */
     QString findSimilar(const QString& str);
 
-    QString strip(QString str);
+    QString stripWord(const QString &str) const;
 
     bool isWord(const QString & str) const;
 

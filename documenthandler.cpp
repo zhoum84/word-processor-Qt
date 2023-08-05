@@ -23,9 +23,8 @@ DocumentHandler::DocumentHandler(QObject *parent)
     , m_selectionStart(0)
     , m_selectionEnd(0)
 {
-    std::ifstream file("./resources/popular.txt");
+    std::ifstream file("wordprocessor/resources/popular.txt");
     dict.loadDict(file);
-    qDebug() << "lol";
 }
 
 QQuickTextDocument *DocumentHandler::document() const
@@ -472,6 +471,21 @@ void DocumentHandler::setList(const int list){
     }
     emit listChanged();
 
+}
+
+Q_INVOKABLE bool DocumentHandler::spellcheck(QString document) const{
+    QString* ptr = &document;
+    QTextStream in(ptr);
+    QString word;
+    while(!in.atEnd()){
+        in >> word;
+        qDebug() << word;
+        if(dict.isWord(word) && word.length() != 1)
+        {
+            QString lol = dict.stripWord(word);
+        }
+    }
+    return dict.checkDict(document);
 }
 
 #include "moc_documenthandler.cpp"
