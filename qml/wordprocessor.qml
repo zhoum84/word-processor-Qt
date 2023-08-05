@@ -98,23 +98,6 @@ ApplicationWindow {
                 onTriggered: close()
             }
         }
-
-        Platform.Menu{
-            title: qsTr("Test")
-            Platform.MenuItem {
-                text: qsTr("&Open")
-                onTriggered: openDialog.open()
-            }
-            Platform.MenuItem {
-                text: qsTr("&Save As...")
-                onTriggered: saveDialog.open()
-            }
-            Platform.MenuItem {
-                text: qsTr("&Quit")
-                onTriggered: close()
-            }
-
-        }
         Platform.Menu {
 
             title: qsTr("&Edit")
@@ -574,6 +557,20 @@ ApplicationWindow {
                     onActivated: document.fontSize = fontSizeBox.currentText
                     onAccepted: document.fontSize = fontSizeBox.currentText
                     Component.onCompleted: fontSizeBox.currentIndex = document.fontSize + 1
+                }
+
+                ToolSeparator {
+                    contentItem.visible: formatRow.y == alignRow.y
+                }
+
+                ToolButton {
+                    id: searchButton
+                    text: "\uE80C" + " Check Spelling" // icon-search
+                    font.family: "fontello"
+                    focusPolicy: Qt.TabFocus
+                    onClicked: function(){
+                        document.spellcheck("abandon m!e");
+                    }
                 }
 
             }

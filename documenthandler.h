@@ -93,6 +93,8 @@ public:
     bool modified() const;
     void setModified(bool m);
 
+    Q_INVOKABLE bool spellcheck(QString document) const;
+
 public Q_SLOTS:
     void load(const QUrl &fileUrl);
     void saveAs(const QUrl &fileUrl);

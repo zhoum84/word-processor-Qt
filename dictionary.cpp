@@ -1,43 +1,48 @@
 #include "dictionary.h"
 
+#include <QTextStream>
 Dictionary::Dictionary()
 {
 
 }
 
 
-bool Dictionary::checkDict(const QString &word) const{
-    return true;
+bool Dictionary::checkDict(const QString &word) const {
+    return dictionary.find(word) != dictionary.end();
 }
 
 
-void Dictionary::loadDict(std::ifstream& infile){
+void Dictionary::loadDict(std::ifstream& infile) {
     std::string str;
-
-    qDebug()<< "xd";
-
     while(std::getline(infile, str))
-    {
         dictionary[QString::fromStdString(str)] = 1;
-        qDebug() << "bruh";
-    }
-
-    QHashIterator<QString, int> i(dictionary);
-    while (i.hasNext()) {
-        i.next();
-        qDebug() << i.key() << ": " << i.value() << Qt::endl;
-    }
 }
 
 QString Dictionary::findSimilar(const QString& str){
     return "";
 }
 
-QString Dictionary::strip(QString str){
-    return "";
+QString Dictionary::stripWord(const QString& str) const {
+    QString word;
+    for(auto &c : str)
+    {
+        if(c.isLetter())
+        {
+            word.append(c);
+        }
+    }
+    qDebug() << "stripped: " << word;
+    return word;
 }
 
-bool Dictionary::isWord(const QString & str) const{
+bool Dictionary::isWord(const QString & str) const {
+    if(str.length() == 1 && str[0].isLetter())
+        return true;
+    for (auto &c : str)
+    {
+        if(!c.isLetter() && (c != '.' && c != '!' && c != '.' && c != '?' && c != ',' && c!= ';' && c!= ':' && c != '"' && c != ')' && c != '('))
+            return false;
+    }
     return true;
 }
 
