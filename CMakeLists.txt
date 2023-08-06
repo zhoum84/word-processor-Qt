@@ -26,7 +26,6 @@ qt_add_qml_module(wordprocessor
         "qml/+touch/texteditor.qml"
         "qml/wordprocessor.qml"
         "qml/PageBreak.qml"
-        "qml/page.qml"
     RESOURCES
         "texteditor.html"
         "+touch/texteditor.html"
