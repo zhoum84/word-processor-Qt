@@ -51,6 +51,7 @@ public:
      */
     void loadDict(std::ifstream& infile);
 
+    void changeOne(QString word);
 
     /**
      * @brief  Finds a similar word to the misspelled QString
@@ -79,6 +80,7 @@ public:
 
 private:
     QHash<QString, int> dictionary;
+    QVector<QString> edits;
 };
 
 #endif // DICTIONARY_H
