@@ -25,10 +25,25 @@ void Dictionary::changeOne(QString word){
     for(int i = 0; i < word.length(); ++i)
     {
         auto temp = word.remove(i,1);
-        if(dictionary.find(temp) != dictionary.end())
+        if(dictionary.find(temp) != dictionary.end()){
             edits.push_back(temp);
+            qDebug() << temp;
+        }
     }
     //transposes
+    for(int i = 0; i < word.length(); ++i)
+    {
+        for(int j = i + 1; j < word.length(); ++j)
+        {
+            auto temp = word;
+            std::swap(temp[i], temp[j]);
+            if(dictionary.find(temp) != dictionary.end()){
+                edits.push_back(temp);
+                qDebug() << temp;
+            }
+        }
+    }
+
     //replaces
     for(int i = 0; i < word.length(); ++i)
     {
@@ -42,14 +57,15 @@ void Dictionary::changeOne(QString word){
     }
 
     //inserts
-    for(int i = 0; i < word.length() + 1; ++i)
+    for(int i = 0; i < word.length(); ++i){
         for(int j = 0; j < 26; ++j)
         {
-            auto temp = word.insert(i, letters[i]);
+            auto temp = word;
+            temp.insert(i, letters[j]);
             if(dictionary.find(temp) != dictionary.end())
                 edits.push_back(temp);
         }
-
+    }
 }
 
 QString Dictionary::findSimilar(const QString& str){

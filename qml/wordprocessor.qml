@@ -652,11 +652,15 @@ ApplicationWindow {
             onLinkActivated: function (link) {
                 Qt.openUrlExternally(link)
             }
-            onEditingFinished: function() {
-                footer.count = document.count
-            }
-            Component.onCompleted: function(){
-                footer.count = document.count
+
+            onTextChanged: typeTimer.restart()
+
+            Timer{
+                id: typeTimer
+                interval: 500
+                onTriggered: function(){
+                    document.countChanged()
+                }
             }
         }
 
@@ -704,15 +708,10 @@ ApplicationWindow {
             }
         }
     }
-//    Window{
-//        id: test
-//        visible: true
-//    }
     footer: TextArea{
         id: footer
-        property int count: document.count
         height: 20
-        text: "Page " + flickable.currentPage + " of " + flickable.pageCount + "    "+ Qt.locale().nativeLanguageName + " (" + Qt.locale().nativeTerritoryName + ") " + count + " words"
+        text: "Page " + flickable.currentPage + " of " + flickable.pageCount + "    "+ Qt.locale().nativeLanguageName + " (" + Qt.locale().nativeTerritoryName + ") " + document.count + " words"
         color: "black"
         font.pointSize: 10
         background: Rectangle {
