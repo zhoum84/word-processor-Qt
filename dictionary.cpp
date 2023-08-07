@@ -18,28 +18,82 @@ void Dictionary::loadDict(std::ifstream& infile) {
         dictionary[QString::fromStdString(str)] = 1;
 }
 
-void Dictionary::changeOne(QString word){
+void Dictionary::changeOne(const QString &word){
     QString letters = "abcdefghijklmnopqrstuvwxyz";
-
     //deletes
     for(int i = 0; i < word.length(); ++i)
     {
-        auto temp = word.remove(i,1);
+        auto temp = word;
+        temp.remove(i,1);
         if(dictionary.find(temp) != dictionary.end()){
-            edits.push_back(temp);
-            qDebug() << temp;
+            similar.push_back(temp);
         }
+        edits.push_back(temp);
     }
     //transposes
-    for(int i = 0; i < word.length(); ++i)
+    for(int i = 0; i < word.length() - 1; ++i)
     {
         for(int j = i + 1; j < word.length(); ++j)
         {
             auto temp = word;
             std::swap(temp[i], temp[j]);
             if(dictionary.find(temp) != dictionary.end()){
-                edits.push_back(temp);
-                qDebug() << temp;
+                similar.push_back(temp);
+            }
+            edits.push_back(temp);
+        }
+    }
+
+    //replaces
+    for(int i = 0; i < word.length(); ++i)
+    {
+        for(int j = 0; j < 26; ++j)
+        {
+            auto temp = word;
+            temp[i] = letters[j];
+            if(dictionary.find(temp) != dictionary.end())
+            {
+                similar.push_back(temp);
+            }
+            edits.push_back(temp);
+        }
+    }
+
+    //inserts
+    for(int i = 0; i < word.length() + 1; ++i){
+        for(int j = 0; j < 26; ++j)
+        {
+            auto temp = word;
+            temp.insert(i, letters[j]);
+            if(dictionary.find(temp) != dictionary.end()){
+                similar.push_back(temp);
+            }
+            edits.push_back(temp);
+        }
+    }
+}
+
+void Dictionary::changeTwo(const QString &word){
+    QString letters = "abcdefghijklmnopqrstuvwxyz";
+    qDebug() << word;
+    //deletes
+    for(int i = 0; i < word.length(); ++i)
+    {
+        auto temp = word;
+        temp.remove(i,1);
+        if(dictionary.find(temp) != dictionary.end()){
+            similar.push_back(temp);
+        }
+    }
+    //transposes
+    for(int i = 0; i < word.length() - 1; ++i)
+    {
+        for(int j = i + 1; j < word.length(); ++j)
+        {
+            auto temp = word;
+            std::swap(temp[i], temp[j]);
+            if(dictionary.find(temp) != dictionary.end()){
+                similar.push_back(temp);
             }
         }
     }
@@ -52,24 +106,52 @@ void Dictionary::changeOne(QString word){
             auto temp = word;
             temp[i] = letters[j];
             if(dictionary.find(temp) != dictionary.end())
-                edits.push_back(temp);
+            {
+                similar.push_back(temp);
+            }
         }
     }
 
     //inserts
-    for(int i = 0; i < word.length(); ++i){
+    for(int i = 0; i < word.length() + 1; ++i){
         for(int j = 0; j < 26; ++j)
         {
             auto temp = word;
             temp.insert(i, letters[j]);
-            if(dictionary.find(temp) != dictionary.end())
-                edits.push_back(temp);
+            if(dictionary.find(temp) != dictionary.end()){
+                similar.push_back(temp);
+            }
         }
     }
 }
 
 QString Dictionary::findSimilar(const QString& str){
-    return "";
+    changeOne(str);
+
+    if(!similar.isEmpty())
+    {
+        qDebug() << "edit1: " << similar[0];
+        auto temp = similar[0];
+        clearSimilar();
+        return temp;
+    }
+
+    for(auto &c : edits)
+        changeTwo(c);
+
+    if(!similar.isEmpty())
+    {
+        auto temp = similar[0];
+        clearSimilar();
+        qDebug() << "edit2: " << temp;
+        return temp;
+    }
+    else{
+        clearSimilar();
+        qDebug() << str;
+        return str;
+    }
+
 }
 
 QString Dictionary::stripWord(const QString& str) const {
@@ -94,5 +176,12 @@ bool Dictionary::isWord(const QString & str) const {
     return true;
 }
 
-void Dictionary::clear(){}
+void Dictionary::clearSimilar(){
+    QVector<QString> temp;
+    QVector<QString> temp2;
+    std::swap(temp, edits);
+    std::swap(temp2, similar);
+}
+
+void Dictionary::reset(){}
 

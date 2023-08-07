@@ -569,7 +569,7 @@ ApplicationWindow {
                     font.family: "fontello"
                     focusPolicy: Qt.TabFocus
                     onClicked: function(){
-                        document.spellcheck("abandon m!e");
+                        document.spellcheck("abando m!er ext!!ra");
                     }
                 }
 
