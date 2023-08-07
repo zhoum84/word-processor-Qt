@@ -93,7 +93,7 @@ public:
     bool modified() const;
     void setModified(bool m);
 
-    Q_INVOKABLE bool spellcheck(QString document) const;
+    Q_INVOKABLE bool spellcheck(QString document);
 
 public Q_SLOTS:
     void load(const QUrl &fileUrl);
@@ -136,8 +136,10 @@ private:
     int m_selectionStart;
     int m_selectionEnd;
 
-    bool initial = true;
-    uint32_t previousCount = 0;
+    //QTimer* mTimer;
+
+//    bool initial = true;
+//    uint32_t previousCount = 0;
     QUrl m_fileUrl;
 
     Dictionary dict;

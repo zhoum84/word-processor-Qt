@@ -262,7 +262,7 @@ uint32_t DocumentHandler::count(){
     uint32_t size = 0, counter = 0;
     auto text = m_document->textDocument()->toPlainText();
 
-    if(text.size()==0)
+    if(text.isEmpty())
         return 0;
 
 //    if(!modified() && !initial)
@@ -275,8 +275,8 @@ uint32_t DocumentHandler::count(){
         if(text.at(i-1).isSpace() && text.at(i).isLetterOrNumber())
             ++counter;
     }
-    previousCount = counter;
-    initial = false;
+//    previousCount = counter;
+//    initial = false;
     return counter;
 }
 
@@ -473,7 +473,7 @@ void DocumentHandler::setList(const int list){
 
 }
 
-Q_INVOKABLE bool DocumentHandler::spellcheck(QString document) const{
+Q_INVOKABLE bool DocumentHandler::spellcheck(QString document){
     QString* ptr = &document;
     QTextStream in(ptr);
     QString word;
@@ -483,6 +483,7 @@ Q_INVOKABLE bool DocumentHandler::spellcheck(QString document) const{
         if(dict.isWord(word) && word.length() != 1)
         {
             QString lol = dict.stripWord(word);
+            dict.changeOne(lol);
         }
     }
     return dict.checkDict(document);
