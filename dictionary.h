@@ -51,7 +51,9 @@ public:
      */
     void loadDict(std::ifstream& infile);
 
-    void changeOne(QString word);
+    void changeOne(const QString &word);
+
+    void changeTwo(const QString &word);
 
     /**
      * @brief  Finds a similar word to the misspelled QString
@@ -70,17 +72,20 @@ public:
 
     bool isWord(const QString & str) const;
 
+    void clearSimilar();
+
     /**
-     * @brief  Clears the dictionary.
+     * @brief  Resets the dictionary.
      *         Used for user-inputted dictionary.
      */
-    void clear();
+    void reset();
 
 
 
 private:
     QHash<QString, int> dictionary;
     QVector<QString> edits;
+    QVector<QString> similar;
 };
 
 #endif // DICTIONARY_H

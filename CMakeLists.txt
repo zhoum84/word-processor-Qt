@@ -32,10 +32,11 @@ qt_add_qml_module(wordprocessor
         "fonts/fontello.ttf"
         "resources/qt-logo.png"
         "resources/popular.txt"
+        "resources/enable1.txt"
     SOURCES
         dictionary.h
         dictionary.cpp
-    RESOURCES resources/popular.txt
+
 
 )
 

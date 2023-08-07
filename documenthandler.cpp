@@ -23,7 +23,7 @@ DocumentHandler::DocumentHandler(QObject *parent)
     , m_selectionStart(0)
     , m_selectionEnd(0)
 {
-    std::ifstream file("wordprocessor/resources/popular.txt");
+    std::ifstream file("wordprocessor/resources/enable1.txt");
     dict.loadDict(file);
 }
 
@@ -480,10 +480,11 @@ Q_INVOKABLE bool DocumentHandler::spellcheck(QString document){
     while(!in.atEnd()){
         in >> word;
         qDebug() << word;
-        if(dict.isWord(word) && word.length() != 1)
+        if(dict.isWord(word))
         {
-            QString lol = dict.stripWord(word);
-            dict.changeOne(lol);
+            QString cleaned = dict.stripWord(word);
+            if(!dict.checkDict(cleaned))
+                dict.findSimilar(cleaned);
         }
     }
     return dict.checkDict(document);
