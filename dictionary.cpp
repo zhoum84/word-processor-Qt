@@ -75,7 +75,6 @@ void Dictionary::changeOne(const QString &word){
 
 void Dictionary::changeTwo(const QString &word){
     QString letters = "abcdefghijklmnopqrstuvwxyz";
-    qDebug() << word;
     //deletes
     for(int i = 0; i < word.length(); ++i)
     {
@@ -176,6 +175,9 @@ bool Dictionary::isWord(const QString & str) const {
     return true;
 }
 
+QVector<QString> Dictionary::getSimilar(){
+    return similar;
+}
 void Dictionary::clearSimilar(){
     QVector<QString> temp;
     QVector<QString> temp2;

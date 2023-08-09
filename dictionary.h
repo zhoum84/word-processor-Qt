@@ -72,6 +72,8 @@ public:
 
     bool isWord(const QString & str) const;
 
+    QVector<QString> getSimilar();
+
     void clearSimilar();
 
     /**
