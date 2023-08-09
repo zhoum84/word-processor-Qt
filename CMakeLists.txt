@@ -26,6 +26,7 @@ qt_add_qml_module(wordprocessor
         "qml/+touch/texteditor.qml"
         "qml/wordprocessor.qml"
         "qml/PageBreak.qml"
+        "createComponent.js"
     RESOURCES
         "texteditor.html"
         "+touch/texteditor.html"
@@ -36,6 +37,7 @@ qt_add_qml_module(wordprocessor
     SOURCES
         dictionary.h
         dictionary.cpp
+
 
 
 )
