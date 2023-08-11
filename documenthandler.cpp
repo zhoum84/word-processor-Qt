@@ -479,9 +479,9 @@ Q_INVOKABLE bool DocumentHandler::spellcheck(QString document){
     QString word;
     while(!in.atEnd()){
         in >> word;
-        qDebug() << word;
         if(dict.isWord(word))
         {
+                qDebug() << word;
             QString cleaned = dict.stripWord(word);
             if(!dict.checkDict(cleaned))
                 dict.findSimilar(cleaned);

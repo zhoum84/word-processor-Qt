@@ -569,8 +569,64 @@ ApplicationWindow {
                     font.family: "fontello"
                     focusPolicy: Qt.TabFocus
                     onClicked: function(){
-                        document.spellcheck("guic juce jucie juise juse");
+                        document.spellcheck(textArea.text);
                     }
+                }
+
+                ToolSeparator {
+                    contentItem.visible: formatRow.y == alignRow.y
+                }
+
+                ToolButton {
+                    id: findButton
+                    text: "\uE80C" + " Find a Word" // icon-search
+                    font.family: "fontello"
+                    focusPolicy: Qt.TabFocus
+                    onClicked: function(){
+                        if(!popup.opened)
+                            popup.open();
+                        else
+                            popup.close()
+                    }
+                    Popup {
+                        id: popup
+                        width: 300
+                        height: 40
+                        anchors.centerIn: parent.right
+                        topPadding: 8
+
+                        topMargin: 27
+                        focus: true
+                        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+                        Row {
+
+                            anchors.fill:parent
+                            TextField {
+
+                                width: 200
+                                background: Rectangle {
+                                    border.color: "black"
+                                    border.width: 1
+
+                                }
+                            }
+
+                            ToolButton{
+                                id: nextButton
+                                text: "\uE80C"// icon-search
+                                font.family: "fontello"
+                            }
+                            ToolSeparator {
+                            }
+                            ToolButton{
+                                id: prevButton
+                                text: "\uE80C"// icon-search
+                                font.family: "fontello"
+                            }
+
+                        }
+                    }
+
                 }
 
             }
@@ -605,7 +661,6 @@ ApplicationWindow {
             errorDialog.open()
         }
     }
-
     Flickable {
         id: flickable
         flickableDirection: Flickable.VerticalFlick
