@@ -93,6 +93,10 @@ public:
     bool modified() const;
     void setModified(bool m);
 
+    Q_INVOKABLE QVector<size_t> findTextInstances(const QString &text);
+    Q_INVOKABLE void unhighlightText();
+    Q_INVOKABLE void findAndHighlight(const QString& text);
+
     Q_INVOKABLE bool spellcheck(QString document);
 
 public Q_SLOTS:
@@ -142,6 +146,8 @@ private:
 //    uint32_t previousCount = 0;
     QUrl m_fileUrl;
 
+    QVector<size_t> positions;
+    QVector<QTextCharFormat> formats;
     Dictionary dict;
 };
 

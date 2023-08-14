@@ -165,8 +165,6 @@ QString Dictionary::stripWord(const QString& str) const {
 }
 
 bool Dictionary::isWord(const QString & str) const {
-    if(str.length() == 1 && str[0].isLetter())
-        return true;
 
     for (auto &c : str)
         if(!c.isLetter() && (c != '.' && c != '!' && c != '.' && c != '?' && c != ',' && c!= ';' && c!= ':' && c != '"' && c != ')' && c != '('))

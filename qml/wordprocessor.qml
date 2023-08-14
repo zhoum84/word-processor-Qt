@@ -78,6 +78,11 @@ ApplicationWindow {
         onTriggered: document.underline = !document.underline
     }
 
+    Action {
+        id: findAction
+        shortcut: "Ctrl+F"
+        onTriggered: popup.open()
+    }
 
     Platform.MenuBar {
 
@@ -590,20 +595,24 @@ ApplicationWindow {
                     }
                     Popup {
                         id: popup
-                        width: 300
+                        width: 350
                         height: 40
                         anchors.centerIn: parent.right
                         topPadding: 8
-
                         topMargin: 27
                         focus: true
+
                         closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
                         Row {
 
                             anchors.fill:parent
                             TextField {
-
-                                width: 200
+                                id: findBox
+                                width: 220
+                                onTextChanged: function(){
+                                    if(findBox.text)
+                                        document.findAndHighlight(findBox.text)
+                                }
                                 background: Rectangle {
                                     border.color: "black"
                                     border.width: 1
@@ -613,14 +622,27 @@ ApplicationWindow {
 
                             ToolButton{
                                 id: nextButton
-                                text: "\uE80C"// icon-search
+                                text: "\uE80D"// icon-up-open
                                 font.family: "fontello"
+                                enabled: false
+                            }
+                            ToolButton{
+                                id: prevButton
+                                text: "\uE80E"// icon-down-open
+                                font.family: "fontello"
+                                enabled: false
                             }
                             ToolSeparator {
                             }
                             ToolButton{
-                                id: prevButton
-                                text: "\uE80C"// icon-search
+                                id: closeButton
+                                text: "\uE80F"// icon-cancel
+                                font.family: "fontello"
+                                onClicked: popup.close()
+                            }
+                            ToolButton{
+                                id: optionsButton
+                                text: "\uF142" // icon-ellipsis-verticalCenter
                                 font.family: "fontello"
                             }
 
@@ -720,7 +742,7 @@ ApplicationWindow {
         }
 
         onMovementEnded: function() {
-            flickable.currentPage = Math.ceil(contentY + moveable.mouseY)/flickable.pageSize + 1;
+            flickable.currentPage = Math.min(Math.floor(1.5 * (contentY + moveable.mouseY)/flickable.pageSize + 1), pageCount);
         }
 
         ScrollBar.vertical: ScrollBar {}

@@ -121,8 +121,6 @@ void DocumentHandler::setAlignment(Qt::Alignment alignment)
     QTextCursor cursor = textCursor();
     cursor.mergeBlockFormat(format);
 
-    qDebug() << m_document->textDocument()->pageCount();
-    qDebug() << m_document->textDocument()->pageSize();
     emit alignmentChanged();
 }
 
@@ -473,6 +471,43 @@ void DocumentHandler::setList(const int list){
 
 }
 
+Q_INVOKABLE QVector<size_t> DocumentHandler::findTextInstances(const QString &text){
+    auto doc = m_document->textDocument()->toPlainText();
+    QVector<size_t> instances;
+    QTextCursor cursor = textCursor();
+
+    size_t s = 0;
+
+    qDebug() << text;
+    while((s = doc.indexOf(text, s, Qt::CaseInsensitive)) != -1)
+    {
+        instances.push_back(s);
+        cursor.setPosition(s);
+        formats.push_back(cursor.charFormat());
+        ++s;
+    }
+
+    return instances;
+}
+
+Q_INVOKABLE void DocumentHandler::unhighlightText(){
+
+}
+
+Q_INVOKABLE void DocumentHandler::findAndHighlight(const QString& text){
+    positions.clear();
+    formats.clear();
+    positions = findTextInstances(text);
+    auto doc = m_document->textDocument()->toPlainText();
+
+    for(auto &c : positions)
+    {
+        doc.replace(c,text.length(), "<font color='#FF0000'>" + text + "</font>");
+    }
+
+    m_document->textDocument()->setHtml(doc);
+
+}
 Q_INVOKABLE bool DocumentHandler::spellcheck(QString document){
     QString* ptr = &document;
     QTextStream in(ptr);
