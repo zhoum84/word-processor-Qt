@@ -33,9 +33,6 @@ int main(int argc, char *argv[])
     QStringList selectors;
 #ifdef QT_EXTRA_FILE
     selectors += QT_EXTRA_FILE;
-#else
-    if (app.arguments().contains("-touch"))
-        selectors += "touch";
 #endif
 
     QQmlApplicationEngine engine;

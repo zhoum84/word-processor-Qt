@@ -23,13 +23,11 @@ qt_add_qml_module(wordprocessor
     URI wordprocessor
     NO_RESOURCE_TARGET_PATH
     QML_FILES
-        "qml/+touch/texteditor.qml"
         "qml/wordprocessor.qml"
         "qml/PageBreak.qml"
         "createComponent.js"
     RESOURCES
         "texteditor.html"
-        "+touch/texteditor.html"
         "fonts/fontello.ttf"
         "resources/qt-logo.png"
         "resources/popular.txt"
@@ -52,12 +50,6 @@ target_link_libraries(wordprocessor PUBLIC
 if(TARGET Qt::Widgets)
     target_link_libraries(wordprocessor PUBLIC
         Qt::Widgets
-    )
-endif()
-
-if(CMAKE_CROSSCOMPILING)
-    target_compile_definitions(wordprocessor PUBLIC
-        QT_EXTRA_FILE="touch"
     )
 endif()
 
