@@ -10,6 +10,7 @@
 #include <QUrl>
 #include <QtQml/qqmlregistration.h>
 
+#include "texthighlighter.h"
 #include "dictionary.h"
 
 QT_BEGIN_NAMESPACE
@@ -148,6 +149,8 @@ private:
 
     QVector<size_t> positions;
     QVector<QTextCharFormat> formats;
+    QString search;
+
     Dictionary dict;
 };
 

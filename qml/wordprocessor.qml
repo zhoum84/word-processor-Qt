@@ -603,6 +603,12 @@ ApplicationWindow {
                         focus: true
 
                         closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+                        onOpened: function() {
+                            document.findAndHighlight(findBox.text)
+
+                        }
+                        onClosed: document.unhighlightText()
+
                         Row {
 
                             anchors.fill:parent
@@ -612,6 +618,8 @@ ApplicationWindow {
                                 onTextChanged: function(){
                                     if(findBox.text)
                                         document.findAndHighlight(findBox.text)
+                                    else
+                                        document.unhighlightText();
                                 }
                                 background: Rectangle {
                                     border.color: "black"

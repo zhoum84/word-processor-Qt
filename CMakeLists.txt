@@ -35,6 +35,8 @@ qt_add_qml_module(wordprocessor
     SOURCES
         dictionary.h
         dictionary.cpp
+        texthighlighter.h
+        texthighlighter.cpp
 
 
 

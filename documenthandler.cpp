@@ -15,6 +15,8 @@
 #include <QStringDecoder>
 #include <QTextDocument>
 #include <QDebug>
+#include <QSyntaxHighlighter>
+
 
 DocumentHandler::DocumentHandler(QObject *parent)
     : QObject(parent)
@@ -451,7 +453,6 @@ void DocumentHandler::setList(const int list){
         if(cursor.selectedText().isEmpty())
         {
             qDebug() <<cursor.selectedText();
-            qDebug()<<"lol";
             listed->setFormat(listFormat);
             //int count = cursor.block().blockNumber() - 3;
             int count = listed->count() - 2;
@@ -461,7 +462,6 @@ void DocumentHandler::setList(const int list){
         }
         else
         {
-            qDebug() << "xd";
             listed->setFormat( listFormat );
             //for( int i = listed->count() - 1; i >= 0 ; --i )
                 listed->removeItem( listed->count() - 1);
@@ -478,7 +478,6 @@ Q_INVOKABLE QVector<size_t> DocumentHandler::findTextInstances(const QString &te
 
     size_t s = 0;
 
-    qDebug() << text;
     while((s = doc.indexOf(text, s, Qt::CaseInsensitive)) != -1)
     {
         instances.push_back(s);
@@ -491,23 +490,37 @@ Q_INVOKABLE QVector<size_t> DocumentHandler::findTextInstances(const QString &te
 }
 
 Q_INVOKABLE void DocumentHandler::unhighlightText(){
-
-}
-
-Q_INVOKABLE void DocumentHandler::findAndHighlight(const QString& text){
-    positions.clear();
-    formats.clear();
-    positions = findTextInstances(text);
-    auto doc = m_document->textDocument()->toPlainText();
+    QTextCursor cursor = textCursor();
+    QTextCharFormat fmt;
+    fmt.setBackground(Qt::transparent);
 
     for(auto &c : positions)
     {
-        doc.replace(c,text.length(), "<font color='#FF0000'>" + text + "</font>");
+        cursor.setPosition(c);
+        cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, search.length());
+        cursor.mergeCharFormat(fmt);
     }
-
-    m_document->textDocument()->setHtml(doc);
-
 }
+
+Q_INVOKABLE void DocumentHandler::findAndHighlight(const QString& text){
+
+    unhighlightText();
+    positions.clear();
+    formats.clear();
+
+    search = text;
+    positions = findTextInstances(text);
+    QTextCursor cursor = textCursor();
+    QTextCharFormat fmt;
+    fmt.setBackground(Qt::yellow);
+    for(auto &c : positions)
+    {
+        cursor.setPosition(c);
+        cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, text.length());
+        cursor.mergeCharFormat(fmt);
+    }
+}
+
 Q_INVOKABLE bool DocumentHandler::spellcheck(QString document){
     QString* ptr = &document;
     QTextStream in(ptr);
