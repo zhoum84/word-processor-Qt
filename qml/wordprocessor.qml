@@ -742,7 +742,7 @@ ApplicationWindow {
 
             Timer{
                 id: typeTimer
-                interval: 500
+                interval: 400
                 onTriggered: function(){
                     document.countChanged()
                 }

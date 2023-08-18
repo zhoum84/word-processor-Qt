@@ -98,7 +98,7 @@ public:
     Q_INVOKABLE void unhighlightText();
     Q_INVOKABLE void findAndHighlight(const QString& text);
 
-    Q_INVOKABLE bool spellcheck(QString document);
+    Q_INVOKABLE void spellcheck(const QString & document);
 
 public Q_SLOTS:
     void load(const QUrl &fileUrl);
@@ -135,6 +135,9 @@ private:
     QTextDocument *textDocument() const;
     void mergeFormatOnWordOrSelection(const QTextCharFormat &format);
 
+    //testing
+    void timerEvent(QTimerEvent *event) override;
+
     QQuickTextDocument *m_document;
 
     int m_cursorPosition;
@@ -151,6 +154,7 @@ private:
     QVector<QTextCharFormat> formats;
     QString search;
 
+    QVector<size_t> misspelledPos;
     Dictionary dict;
 };
 

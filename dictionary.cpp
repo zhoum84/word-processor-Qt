@@ -8,7 +8,7 @@ Dictionary::Dictionary()
 
 
 bool Dictionary::checkDict(const QString &word) const {
-    return dictionary.find(word) != dictionary.end();
+    return dictionary.find(word.toLower()) != dictionary.end();
 }
 
 
@@ -166,10 +166,13 @@ QString Dictionary::stripWord(const QString& str) const {
 
 bool Dictionary::isWord(const QString & str) const {
 
-    for (auto &c : str)
+
+    for (auto &c : str){
         if(!c.isLetter() && (c != '.' && c != '!' && c != '.' && c != '?' && c != ',' && c!= ';' && c!= ':' && c != '"' && c != ')' && c != '('))
             return false;
-
+        if(c != str[0] && c.isUpper())
+            return false;
+    }
     return true;
 }
 

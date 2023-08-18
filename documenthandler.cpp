@@ -521,21 +521,47 @@ Q_INVOKABLE void DocumentHandler::findAndHighlight(const QString& text){
     }
 }
 
-Q_INVOKABLE bool DocumentHandler::spellcheck(QString document){
-    QString* ptr = &document;
-    QTextStream in(ptr);
-    QString word;
-    while(!in.atEnd()){
-        in >> word;
-        if(dict.isWord(word))
+void DocumentHandler::timerEvent(QTimerEvent *event){
+    qDebug() << event->timerId();
+}
+Q_INVOKABLE void DocumentHandler::spellcheck(const QString &document){
+
+    int x = startTimer(1000);
+    QString doc = m_document->textDocument()->toPlainText();
+    QTextCursor cursor = textCursor();
+    QTextCharFormat wavy;
+    wavy.setFontUnderline(true);
+    wavy.setUnderlineColor(Qt::red);
+    wavy.setUnderlineStyle(QTextCharFormat::SingleUnderline);
+
+    // Sliding window for identifying words. Faster than stringstream
+    int i = 0, j = 1;
+    while(doc[j] != ' ' && j < doc.length())
+        ++j;
+    while(j < doc.length())
+    {
+        while(!doc[i].isLetter() && i < j)
+            ++i;
+        if(i == 0 || (doc[j] == ' ' && doc[i] != ' '))
         {
-                qDebug() << word;
-            QString cleaned = dict.stripWord(word);
-            if(!dict.checkDict(cleaned))
-                dict.findSimilar(cleaned);
+            QString temp = (doc.sliced(i, j - i));
+            if(dict.isWord(temp))
+            {
+                QString cleaned = dict.stripWord(temp);
+                if(!cleaned.isEmpty() && !dict.checkDict(cleaned)){
+                    dict.findSimilar(cleaned);
+                    misspelledPos.push_back(i);
+                    cursor.setPosition(i);
+                    cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, cleaned.length());
+                    cursor.mergeCharFormat(wavy);
+                }
+            }
+            i = j;
         }
+        ++j;
     }
-    return dict.checkDict(document);
+    killTimer(x);
+
 }
 
 #include "moc_documenthandler.cpp"
