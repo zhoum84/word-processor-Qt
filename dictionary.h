@@ -3,9 +3,11 @@
 
 #include <QString>
 #include <QHash>
-#include <QDebug>
 #include <fstream>
-#include <string>
+
+/**
+ * @brief The Dictionary class. Used for spellchecking.
+ */
 class Dictionary
 {
 public:

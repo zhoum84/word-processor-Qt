@@ -7,9 +7,9 @@ if(NOT DEFINED INSTALL_DIR)
     set(INSTALL_DIR "examples")
 endif()
 
-set(INSTALL_DIR "${INSTALL_DIR}/quickcontrols/wordprocessor")
+set(INSTALL_DIR "${INSTALL_DIR}/qwordprocessor")
 
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Quick QuickControls2 OPTIONAL_COMPONENTS Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Quick QuickControls2 Concurrent OPTIONAL_COMPONENTS Widgets)
 
 qt_add_executable(wordprocessor WIN32 MACOSX_BUNDLE
     documenthandler.cpp
@@ -50,6 +50,7 @@ target_link_libraries(wordprocessor PUBLIC
     Qt::Gui
     Qt::Quick
     Qt::QuickControls2
+    Qt6::Concurrent
 )
 
 if(TARGET Qt::Widgets)

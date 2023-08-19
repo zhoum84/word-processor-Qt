@@ -564,10 +564,6 @@ ApplicationWindow {
                     contentItem.visible: formatRow.y == alignRow.y
                 }
 
-                ToolSeparator {
-                    contentItem.visible: formatRow.y == alignRow.y
-                }
-
                 ToolButton {
                     id: findButton
                     text: "\uE80C" + " Find a Word" // icon-search
@@ -760,7 +756,7 @@ ApplicationWindow {
                 interval: 400
                 onTriggered: function(){
                     document.countChanged();
-                    document.spellcheck();
+                    document.runSpellcheck();
                     typeTimer.stop()
                 }
             }
@@ -781,7 +777,7 @@ ApplicationWindow {
             text: qsTr("This should not be seen!")
             enabled: true
             visible: false;
-            onTriggered: document.replaceWord(suggestWord.text.substring(16));
+            onTriggered: function(){document.replaceWord(suggestWord.text.substring(16))}
         }
         Platform.MenuSeparator {
             id: suggestWordSeperator

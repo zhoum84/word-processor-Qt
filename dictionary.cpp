@@ -1,6 +1,9 @@
 #include "dictionary.h"
 
 #include <QTextStream>
+/**
+ * @brief The Dictionary class. Used for spellchecking.
+ */
 Dictionary::Dictionary()
 {
 
@@ -150,7 +153,6 @@ QString Dictionary::findSimilar(const QString& str){
 
     if(!similar.isEmpty())
     {
-        qDebug() << "edit1: " << similar[0];
         auto temp = similar[0];
         corrected.push_back(temp);
         clearSimilar();
@@ -165,13 +167,11 @@ QString Dictionary::findSimilar(const QString& str){
         auto temp = similar[0];
         corrected.push_back(temp);
         clearSimilar();
-        qDebug() << "edit2: " << temp;
         return temp;
     }
     else{
         corrected.push_back("");
         clearSimilar();
-        qDebug() << str;
         return str;
     }
 

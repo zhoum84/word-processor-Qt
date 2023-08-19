@@ -100,6 +100,7 @@ public:
     Q_INVOKABLE void replaceWord(const QString& suggest);
 
     void removeUnderline();
+    Q_INVOKABLE void runSpellcheck();
     Q_INVOKABLE void spellcheck();
 
 public Q_SLOTS:
@@ -146,10 +147,7 @@ private:
     int m_selectionStart;
     int m_selectionEnd;
 
-    //QTimer* mTimer;
 
-//    bool initial = true;
-//    uint32_t previousCount = 0;
     QUrl m_fileUrl;
 
     QVector<size_t> positions;

@@ -1,5 +1,7 @@
 #include "texthighlighter.h"
 
+//This is a class for better text highlighting. Currently WIP
+
 textHighlighter::textHighlighter(QTextDocument *parent) :QSyntaxHighlighter(parent), parent(parent)
 {
 

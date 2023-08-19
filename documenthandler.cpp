@@ -12,8 +12,7 @@
 #include <QStringDecoder>
 #include <QTextDocument>
 #include <QDebug>
-#include <QSyntaxHighlighter>
-
+#include <QtConcurrent>
 
 DocumentHandler::DocumentHandler(QObject *parent)
     : QObject(parent)
@@ -218,11 +217,6 @@ void DocumentHandler::saveAs(const QUrl &fileUrl)
 
 void DocumentHandler::reset()
 {
-    misspelledPos.clear();
-    formats.clear();
-    positions.clear();
-    dict.clearErrors();
-    dict.clearSimilar();
     emit alignmentChanged();
     emit textColorChanged();
     emit fontChanged();
@@ -450,7 +444,6 @@ void DocumentHandler::setList(const int list){
             listed->setFormat(listFormat);
             //int count = cursor.block().blockNumber() - 3;
             int count = listed->count() - 2;
-            qDebug() << listed->itemNumber(cursor.block());
             listed->removeItem(count);
         }
         else
@@ -461,7 +454,6 @@ void DocumentHandler::setList(const int list){
         }
     }
     emit listChanged();
-
 }
 
 Q_INVOKABLE QVector<size_t> DocumentHandler::findTextInstances(const QString &text){
@@ -470,7 +462,6 @@ Q_INVOKABLE QVector<size_t> DocumentHandler::findTextInstances(const QString &te
     QTextCursor cursor = textCursor();
 
     size_t s = 0;
-
     while((s = doc.indexOf(text, s, Qt::CaseInsensitive)) != -1)
     {
         instances.push_back(s);
@@ -550,10 +541,16 @@ Q_INVOKABLE void DocumentHandler::replaceWord(const QString& suggest){
     cursor.insertText(suggest);
 }
 
+Q_INVOKABLE void DocumentHandler::runSpellcheck(){
+    QFuture<void> future = QtConcurrent::run([this]{return spellcheck();});
+    future.waitForFinished();
+}
+
 Q_INVOKABLE void DocumentHandler::spellcheck(){
 
     removeUnderline();
     misspelledPos.clear();
+    dict.clearSimilar();
     QString doc = m_document->textDocument()->toPlainText();
     QTextCursor cursor = textCursor();
     QTextCharFormat wavy;
@@ -562,7 +559,7 @@ Q_INVOKABLE void DocumentHandler::spellcheck(){
     //WavyUnderline does not work, so SingleUnderline for now.
     wavy.setUnderlineStyle(QTextCharFormat::SingleUnderline);
 
-    // Sliding window for identifying words. Faster than stringstream
+    // Sliding window for identifying words. Used because stringstream doesn't track indexes
     int i = 0, j = 1;
     while(doc[j] != ' ' && j < doc.length())
         ++j;
@@ -578,7 +575,7 @@ Q_INVOKABLE void DocumentHandler::spellcheck(){
                 QString cleaned = dict.stripWord(temp);
                 if(!cleaned.isEmpty() && !dict.checkDict(cleaned)){
                     dict.addError(cleaned);
-                    dict.findSimilar(cleaned);
+                    dict.findSimilar(cleaned.toLower());
                     misspelledPos.push_back({i, temp.size()});
                     cursor.setPosition(i);
                     cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, cleaned.length());
