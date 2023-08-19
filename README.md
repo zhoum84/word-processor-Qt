@@ -13,5 +13,19 @@ This is still in development, so new features are being developed.
 - Find and highlight queries (similar to Google Docs)
 
 # Examples
-![alt text](https://github.com/zhoum84/word-processor-qt/blob/main/example1.png?raw=true)
+Spellcheck
+![alt text](https://github.com/zhoum84/word-processor-qt/blob/main/resources/example1.png?raw=true)
+
+
+Find
+
+
+![alt text](https://github.com/zhoum84/word-processor-qt/blob/main/resources/example2.png?raw=true)
+
+
+General Example
+
+
+![alt text](https://github.com/zhoum84/word-processor-qt/blob/main/resources/example3.png?raw=true)
+
 
