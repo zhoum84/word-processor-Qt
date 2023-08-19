@@ -14,26 +14,6 @@ public:
      */
     Dictionary();
 
-//    /**
-//     *  @brief  Subscript operator for checking if the
-//     *          string paramater is in the dictionary.
-//     *
-//     *  @param  The QString to check
-//     *
-//     *  @return true if the Qstring is found, false otherwise
-//     */
-//    bool operator[](const QString &str);
-
-//    /**
-//     *  @brief  Const subscript operator for checking if the
-//     *          string paramater is in the dictionary
-//     *
-//     *  @param  The QString to check
-//     *
-//     *  @return true if the Qstring is found, false otherwise
-//     */
-//    const bool operator[](const QString &str) const;
-
     /**
      *  @brief  Another version of operator[]. Checks if the string
      *          is in the dictionary
@@ -50,6 +30,10 @@ public:
      * @param   ifstream - the file that contains the words to be used
      */
     void loadDict(std::ifstream& infile);
+
+    void addError(const QString & text);
+
+    QString getCorrected(const QString &text);
 
     void changeOne(const QString &word);
 
@@ -68,13 +52,38 @@ public:
      */
     QString findSimilar(const QString& str);
 
+    /**
+     * @brief  Strips the word of all punctuation.
+     *         Used for checking the dictionary file with the word.
+     * @param  str - the string to strip
+     * @return The stripped string.
+     */
     QString stripWord(const QString &str) const;
 
+    /**
+     * @brief  Checks if the word consists of only letters and punctuation.
+     *         Used to see if a word should be spellchecked.
+     *
+     * @param  str - the word to be checked.
+     * @return True if there are only letters and punctuation. False otherwise.
+     */
     bool isWord(const QString & str) const;
 
     QVector<QString> getSimilar();
 
+    size_t getLastChecked();
+
+    /**
+     * @brief  Clears list of edits and similar words.
+     *         Used for every single misspelled text.
+     */
     void clearSimilar();
+
+    /**
+     * @brief  Clears all recorded errors and corrected words.
+     *         Used once for every spellcheck as a whole.
+     */
+    void clearErrors();
 
     /**
      * @brief  Resets the dictionary.
@@ -86,8 +95,11 @@ public:
 
 private:
     QHash<QString, int> dictionary;
+    QVector<QString> errors;
+    QVector<QString> corrected;
     QVector<QString> edits;
     QVector<QString> similar;
+    size_t lastChecked;
 };
 
 #endif // DICTIONARY_H

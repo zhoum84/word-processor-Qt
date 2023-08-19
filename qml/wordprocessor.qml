@@ -1,6 +1,3 @@
-// Copyright (C) 2023 The Qt Company Ltd.
-// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
-
 import QtQuick
 import QtCore
 import QtQuick.Controls
@@ -16,12 +13,11 @@ ApplicationWindow {
     height: Screen.desktopAvailableHeight
     visibility: "Maximized"
     visible: true
-    title: document.fileName + " - Word Processor"
+    title: document.fileName + " - QWord Processor"
 
     Component.onCompleted: {
         x = Screen.width / 2 - width / 2
         y = Screen.height / 2 - height / 2
-
     }
 
     Action {
@@ -574,7 +570,7 @@ ApplicationWindow {
                     font.family: "fontello"
                     focusPolicy: Qt.TabFocus
                     onClicked: function(){
-                        document.spellcheck(textArea.text);
+                        document.spellcheck();
                     }
                 }
 
@@ -593,6 +589,15 @@ ApplicationWindow {
                         else
                             popup.close()
                     }
+
+                    ToolTip {
+                        parent: findButton
+                        visible: findButton.hovered
+                        text: qsTr("<b>Find (Ctrl+F)</b><br>Search for text in<br>the document.")
+                        delay: 500
+                        x: 0
+                    }
+
                     Popup {
                         id: popup
                         width: 350
@@ -603,6 +608,7 @@ ApplicationWindow {
                         focus: true
 
                         closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+
                         onOpened: function() {
                             document.findAndHighlight(findBox.text)
 
@@ -610,7 +616,6 @@ ApplicationWindow {
                         onClosed: document.unhighlightText()
 
                         Row {
-
                             anchors.fill:parent
                             TextField {
                                 id: findBox
@@ -624,7 +629,6 @@ ApplicationWindow {
                                 background: Rectangle {
                                     border.color: "black"
                                     border.width: 1
-
                                 }
                             }
 
@@ -640,18 +644,20 @@ ApplicationWindow {
                                 font.family: "fontello"
                                 enabled: false
                             }
+
                             ToolSeparator {
+                            }
+
+                            ToolButton{
+                                id: optionsButton
+                                text: "\uF142" // icon-ellipsis-verticalCenter
+                                font.family: "fontello"
                             }
                             ToolButton{
                                 id: closeButton
                                 text: "\uE80F"// icon-cancel
                                 font.family: "fontello"
                                 onClicked: popup.close()
-                            }
-                            ToolButton{
-                                id: optionsButton
-                                text: "\uF142" // icon-ellipsis-verticalCenter
-                                font.family: "fontello"
                             }
 
                         }
@@ -718,7 +724,6 @@ ApplicationWindow {
             onPressed: function() {
                 fontBox.currentIndex = fontBox.find(document.family)
                 fontSizeBox.currentIndex = document.fontSize + 1
-
             }
 
             onContentHeightChanged: {
@@ -731,7 +736,27 @@ ApplicationWindow {
                 id: moveable
                 acceptedButtons: Qt.RightButton
                 anchors.fill: parent
-                onClicked: contextMenu.open()
+                onClicked: function(){
+                    if(document.isMisspelled()){
+                        var suggest = document.getCorrectedWord();
+                        suggestWord.visible = true;
+                        if(suggest !== "")
+                        {
+                            suggestWord.text = qsTr("Suggested Word: " + suggest);
+                            suggestWord.enabled = true;
+                        }
+                        else
+                        {
+                            suggestWord.text = qsTr("Could not find suggestion")
+                            suggestWord.enabled = false;
+                        }
+                        suggestWordSeperator.visible = true;
+
+                    }
+                    contextMenu.open();
+                    suggestWord.visible = false;
+                    suggestWordSeperator.visible = false;
+                }
             }
 
             onLinkActivated: function (link) {
@@ -740,11 +765,13 @@ ApplicationWindow {
 
             onTextChanged: typeTimer.restart()
 
-            Timer{
+            Timer {
                 id: typeTimer
                 interval: 400
                 onTriggered: function(){
-                    document.countChanged()
+                    document.countChanged();
+                    document.spellcheck();
+                    typeTimer.stop()
                 }
             }
         }
@@ -759,20 +786,35 @@ ApplicationWindow {
     Platform.Menu {
         id: contextMenu
 
+        Platform.MenuItem{
+            id: suggestWord
+            text: qsTr("This should not be seen!")
+            enabled: true
+            visible: false;
+            onTriggered: document.replaceWord(suggestWord.text.substring(16));
+        }
+        Platform.MenuSeparator {
+            id: suggestWordSeperator
+            visible: false;
+        }
+
         Platform.MenuItem {
             text: qsTr("Copy")
             enabled: textArea.selectedText
             onTriggered: textArea.copy()
+            shortcut: StandardKey.Copy
         }
         Platform.MenuItem {
             text: qsTr("Cut")
             enabled: textArea.selectedText
             onTriggered: textArea.cut()
+            shortcut: StandardKey.Cut
         }
         Platform.MenuItem {
             text: qsTr("Paste")
             enabled: textArea.canPaste
             onTriggered: textArea.paste()
+            shortcut: StandardKey.Paste
         }
 
         Platform.MenuSeparator {}

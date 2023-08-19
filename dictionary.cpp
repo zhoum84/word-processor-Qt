@@ -18,6 +18,27 @@ void Dictionary::loadDict(std::ifstream& infile) {
         dictionary[QString::fromStdString(str)] = 1;
 }
 
+void Dictionary::addError(const QString &text)
+{
+    errors.push_back(text);
+}
+
+QString Dictionary::getCorrected(const QString &text)
+{
+    for(int i = 0; i < errors.size(); ++i)
+    {
+        if(errors[i] == text)
+        {
+            lastChecked = i;
+            return corrected[i];
+        }
+    }
+    return "";
+}
+
+size_t Dictionary::getLastChecked(){
+    return lastChecked;
+}
 void Dictionary::changeOne(const QString &word){
     QString letters = "abcdefghijklmnopqrstuvwxyz";
     //deletes
@@ -131,6 +152,7 @@ QString Dictionary::findSimilar(const QString& str){
     {
         qDebug() << "edit1: " << similar[0];
         auto temp = similar[0];
+        corrected.push_back(temp);
         clearSimilar();
         return temp;
     }
@@ -141,11 +163,13 @@ QString Dictionary::findSimilar(const QString& str){
     if(!similar.isEmpty())
     {
         auto temp = similar[0];
+        corrected.push_back(temp);
         clearSimilar();
         qDebug() << "edit2: " << temp;
         return temp;
     }
     else{
+        corrected.push_back("");
         clearSimilar();
         qDebug() << str;
         return str;
@@ -155,12 +179,9 @@ QString Dictionary::findSimilar(const QString& str){
 
 QString Dictionary::stripWord(const QString& str) const {
     QString word;
-
     for(auto &c : str)
         if(c.isLetter())
             word.append(c);
-
-    qDebug() << "stripped: " << word;
     return word;
 }
 
@@ -179,11 +200,19 @@ bool Dictionary::isWord(const QString & str) const {
 QVector<QString> Dictionary::getSimilar(){
     return similar;
 }
+
 void Dictionary::clearSimilar(){
     QVector<QString> temp;
     QVector<QString> temp2;
     std::swap(temp, edits);
     std::swap(temp2, similar);
+}
+
+void Dictionary::clearErrors(){
+    QVector<QString> temp;
+    QVector<QString> temp2;
+    std::swap(temp, errors);
+    std::swap(temp2, corrected);
 }
 
 void Dictionary::reset(){}

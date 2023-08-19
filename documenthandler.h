@@ -1,6 +1,3 @@
-// Copyright (C) 2023 The Qt Company Ltd.
-// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
-
 #ifndef DOCUMENTHANDLER_H
 #define DOCUMENTHANDLER_H
 
@@ -98,7 +95,12 @@ public:
     Q_INVOKABLE void unhighlightText();
     Q_INVOKABLE void findAndHighlight(const QString& text);
 
-    Q_INVOKABLE void spellcheck(const QString & document);
+    Q_INVOKABLE bool isMisspelled();
+    Q_INVOKABLE QString getCorrectedWord();
+    Q_INVOKABLE void replaceWord(const QString& suggest);
+
+    void removeUnderline();
+    Q_INVOKABLE void spellcheck();
 
 public Q_SLOTS:
     void load(const QUrl &fileUrl);
@@ -154,7 +156,7 @@ private:
     QVector<QTextCharFormat> formats;
     QString search;
 
-    QVector<size_t> misspelledPos;
+    QVector<QPair<size_t, int>> misspelledPos;
     Dictionary dict;
 };
 

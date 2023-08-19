@@ -1,6 +1,3 @@
-// Copyright (C) 2023 The Qt Company Ltd.
-// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
-
 #include "documenthandler.h"
 
 #include <QFile>
@@ -425,8 +422,6 @@ int DocumentHandler::list() const{
 
     const QTextCursor cursor = textCursor();
     QTextList *list = cursor.currentList();
-
-
     //QTextListFormat::Style style = QTextListFormat::ListDisc;
 
     if(list){
@@ -452,13 +447,11 @@ void DocumentHandler::setList(const int list){
         listFormat.setStyle(QTextListFormat::Style(0) );
         if(cursor.selectedText().isEmpty())
         {
-            qDebug() <<cursor.selectedText();
             listed->setFormat(listFormat);
             //int count = cursor.block().blockNumber() - 3;
             int count = listed->count() - 2;
             qDebug() << listed->itemNumber(cursor.block());
             listed->removeItem(count);
-
         }
         else
         {
@@ -491,15 +484,14 @@ Q_INVOKABLE QVector<size_t> DocumentHandler::findTextInstances(const QString &te
 
 Q_INVOKABLE void DocumentHandler::unhighlightText(){
     QTextCursor cursor = textCursor();
-    QTextCharFormat fmt;
-    fmt.setBackground(Qt::transparent);
+    QTextCharFormat format;
+    format.setBackground(Qt::transparent);
 
-    for(auto &c : positions)
-    {
+    std::for_each(positions.begin(), positions.end(), [&cursor, &format, this](auto &c){
         cursor.setPosition(c);
         cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, search.length());
-        cursor.mergeCharFormat(fmt);
-    }
+        cursor.mergeCharFormat(format);
+    });
 }
 
 Q_INVOKABLE void DocumentHandler::findAndHighlight(const QString& text){
@@ -511,27 +503,63 @@ Q_INVOKABLE void DocumentHandler::findAndHighlight(const QString& text){
     search = text;
     positions = findTextInstances(text);
     QTextCursor cursor = textCursor();
-    QTextCharFormat fmt;
-    fmt.setBackground(Qt::yellow);
-    for(auto &c : positions)
-    {
+    QTextCharFormat format;
+    format.setBackground(Qt::yellow);
+
+    std::for_each(positions.begin(), positions.end(), [&cursor, &format, &text](auto &c){
         cursor.setPosition(c);
         cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, text.length());
-        cursor.mergeCharFormat(fmt);
-    }
+        cursor.mergeCharFormat(format);
+    });
 }
 
 void DocumentHandler::timerEvent(QTimerEvent *event){
     qDebug() << event->timerId();
 }
-Q_INVOKABLE void DocumentHandler::spellcheck(const QString &document){
 
-    int x = startTimer(1000);
+void DocumentHandler::removeUnderline(){
+    QTextCursor cursor = textCursor();
+    QTextCharFormat fmt;
+    fmt.setFontUnderline(false);
+
+    std::for_each(misspelledPos.begin(), misspelledPos.end(), [&cursor, &fmt](auto &c){
+        cursor.setPosition(c.first);
+        cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, c.second);
+        cursor.mergeCharFormat(fmt);
+    });
+}
+
+Q_INVOKABLE bool DocumentHandler::isMisspelled(){
+    QTextCharFormat format = textCursor().charFormat();
+    return format.underlineColor() == Qt::red;
+}
+
+Q_INVOKABLE QString DocumentHandler::getCorrectedWord(){
+    QTextCursor cursor = textCursor();
+    cursor.select(QTextCursor::WordUnderCursor);
+    QString misspell = cursor.selectedText();
+    return dict.getCorrected(misspell);
+}
+
+Q_INVOKABLE void DocumentHandler::replaceWord(const QString& suggest){
+    size_t p = dict.getLastChecked();
+    QPair<int, size_t> pos = misspelledPos[p];
+    QTextCursor cursor = textCursor();
+    cursor.setPosition(pos.first);
+    cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, pos.second);
+    cursor.insertText(suggest);
+}
+
+Q_INVOKABLE void DocumentHandler::spellcheck(){
+
+    removeUnderline();
+    misspelledPos.clear();
     QString doc = m_document->textDocument()->toPlainText();
     QTextCursor cursor = textCursor();
     QTextCharFormat wavy;
-    wavy.setFontUnderline(true);
+
     wavy.setUnderlineColor(Qt::red);
+    //WavyUnderline does not work, so SingleUnderline for now.
     wavy.setUnderlineStyle(QTextCharFormat::SingleUnderline);
 
     // Sliding window for identifying words. Faster than stringstream
@@ -549,8 +577,9 @@ Q_INVOKABLE void DocumentHandler::spellcheck(const QString &document){
             {
                 QString cleaned = dict.stripWord(temp);
                 if(!cleaned.isEmpty() && !dict.checkDict(cleaned)){
+                    dict.addError(cleaned);
                     dict.findSimilar(cleaned);
-                    misspelledPos.push_back(i);
+                    misspelledPos.push_back({i, temp.size()});
                     cursor.setPosition(i);
                     cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, cleaned.length());
                     cursor.mergeCharFormat(wavy);
@@ -560,7 +589,6 @@ Q_INVOKABLE void DocumentHandler::spellcheck(const QString &document){
         }
         ++j;
     }
-    killTimer(x);
 
 }
 
