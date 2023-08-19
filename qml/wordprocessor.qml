@@ -564,16 +564,6 @@ ApplicationWindow {
                     contentItem.visible: formatRow.y == alignRow.y
                 }
 
-                ToolButton {
-                    id: searchButton
-                    text: "\uE80C" + " Check Spelling" // icon-search
-                    font.family: "fontello"
-                    focusPolicy: Qt.TabFocus
-                    onClicked: function(){
-                        document.spellcheck();
-                    }
-                }
-
                 ToolSeparator {
                     contentItem.visible: formatRow.y == alignRow.y
                 }
@@ -686,7 +676,7 @@ ApplicationWindow {
             if (Qt.application.arguments.length === 2)
                 document.load("file:" + Qt.application.arguments[1]);
             else
-                document.load("qrc:/texteditor.html")
+                document.load("qrc:/example.html")
         }
         onLoaded: function (text, format) {
             textArea.textFormat = format

@@ -218,6 +218,11 @@ void DocumentHandler::saveAs(const QUrl &fileUrl)
 
 void DocumentHandler::reset()
 {
+    misspelledPos.clear();
+    formats.clear();
+    positions.clear();
+    dict.clearErrors();
+    dict.clearSimilar();
     emit alignmentChanged();
     emit textColorChanged();
     emit fontChanged();
@@ -262,9 +267,6 @@ uint32_t DocumentHandler::count(){
     if(text.isEmpty())
         return 0;
 
-//    if(!modified() && !initial)
-//        return previousCount;
-
     if(!text.at(0).isLetterOrNumber())
         ++counter;
     for(int i = 1; i<text.length(); ++i)
@@ -272,8 +274,6 @@ uint32_t DocumentHandler::count(){
         if(text.at(i-1).isSpace() && text.at(i).isLetterOrNumber())
             ++counter;
     }
-//    previousCount = counter;
-//    initial = false;
     return counter;
 }
 

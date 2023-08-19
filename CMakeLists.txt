@@ -24,16 +24,21 @@ qt_add_qml_module(wordprocessor
         "qml/PageBreak.qml"
         "createComponent.js"
     RESOURCES
-        "texteditor.html"
         "fonts/fontello.ttf"
-        "resources/qt-logo.png"
         "resources/popular.txt"
         "resources/enable1.txt"
+        "example.html"
+        "resources/background.jpg"
+        "resources/example1.png"
+        "resources/example2.png"
+        "resources/example3.png"
     SOURCES
         dictionary.h
         dictionary.cpp
         texthighlighter.h
         texthighlighter.cpp
+
+
 
 
 
