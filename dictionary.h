@@ -121,12 +121,6 @@ public:
      */
     void clearErrors();
 
-    /**
-     * @brief  Resets the dictionary.
-     *         Used for user-inputted dictionary.
-     */
-    void reset();
-
 
 
 private:
