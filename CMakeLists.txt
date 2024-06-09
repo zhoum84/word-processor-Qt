@@ -22,7 +22,7 @@ qt_add_qml_module(wordprocessor
     QML_FILES
         "qml/wordprocessor.qml"
         "qml/PageBreak.qml"
-        "createComponent.js"
+
     RESOURCES
         "fonts/fontello.ttf"
         "resources/popular.txt"
@@ -37,7 +37,8 @@ qt_add_qml_module(wordprocessor
         dictionary.cpp
         texthighlighter.h
         texthighlighter.cpp
-        SOURCES notes.h notes.cpp
+        notes.h
+        notes.cpp
 
 
 
