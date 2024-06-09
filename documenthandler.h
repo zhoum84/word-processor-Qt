@@ -9,6 +9,7 @@
 
 #include "texthighlighter.h"
 #include "dictionary.h"
+#include "notes.h"
 
 QT_BEGIN_NAMESPACE
 class QTextDocument;
@@ -105,6 +106,7 @@ public:
     void removeUnderline();
     Q_INVOKABLE void runSpellcheck();
     Q_INVOKABLE void spellcheck();
+
 
 public Q_SLOTS:
     void load(const QUrl &fileUrl);

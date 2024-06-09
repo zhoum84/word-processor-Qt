@@ -14,7 +14,6 @@ bool Dictionary::checkDict(const QString &word) const {
     return dictionary.find(word.toLower()) != dictionary.end() || userDictionary.contains(word.toLower());
 }
 
-
 void Dictionary::loadDict(std::ifstream& infile) {
     std::string str;
     while(std::getline(infile, str))
@@ -32,6 +31,7 @@ void Dictionary::addToUserDict(const QString &text){
     QFile userDict("wordprocessor/resources/userDictionary.txt");
     if (userDict.open(QFile::WriteOnly)) {
         QTextStream out(&userDict);
+        out << text << Qt::endl;
     }
     userDict.close();
 }
@@ -242,5 +242,4 @@ void Dictionary::clearErrors(){
     std::swap(temp2, corrected);
 }
 
-void Dictionary::reset(){}
 
