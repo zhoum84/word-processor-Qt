@@ -42,10 +42,26 @@ public:
      */
     void loadUserDict(std::ifstream& infile);
 
+    /**
+     * @brief   adds specific word to user dictionary file
+     *
+     * @param   QString - the word to add
+     */
     void addToUserDict(const QString& text);
+
+    /**
+     * @brief   wipes user dictionary file clean
+     */
+    void clearUserDict();
 
     void addError(const QString & text);
 
+    /**
+     * @brief getCorrected - finds the suggested correction
+     *                       associated with a certain misspelled word.
+     * @param text a misspelled word
+     * @return the suggested correction or "" if nothing is found
+     */
     QString getCorrected(const QString &text);
 
     void changeOne(const QString &word);
@@ -83,6 +99,10 @@ public:
     bool isWord(const QString & str) const;
 
     QVector<QString> getSimilar();
+
+    /**
+     * @brief Gets last checked word in spellcheck. This is used for replacing a misspelled word with a correct one
+     */
 
     size_t getLastChecked();
 

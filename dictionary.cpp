@@ -30,10 +30,17 @@ void Dictionary::loadUserDict(std::ifstream& infile) {
 void Dictionary::addToUserDict(const QString &text){
     userDictionary.insert(text);
     QFile userDict("wordprocessor/resources/userDictionary.txt");
-    if (userDict.open(QFile::WriteOnly | QFile::Truncate)) {
+    if (userDict.open(QFile::WriteOnly)) {
         QTextStream out(&userDict);
-        out << text << Qt::endl;
     }
+    userDict.close();
+}
+
+void Dictionary::clearUserDict(){
+    QFile userDict("wordprocessor/resources/userDictionary.txt");
+    userDict.open(QFile::WriteOnly | QFile::Truncate);
+    userDict.close();
+    userDictionary.clear();
 }
 
 void Dictionary::addError(const QString &text)

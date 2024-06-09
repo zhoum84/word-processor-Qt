@@ -160,6 +160,21 @@ ApplicationWindow {
             }
         }
 
+        Platform.Menu {
+            title: qsTr("&Tools")
+
+            Platform.MenuItem {
+                text: qsTr("View Personal Dictionary")
+                onTriggered: document.clearUserDict();
+            }
+
+            Platform.MenuItem {
+                text: qsTr("Clear Personal Dictionary")
+                onTriggered: document.clearUserDict();
+            }
+
+        }
+
 
 
 
