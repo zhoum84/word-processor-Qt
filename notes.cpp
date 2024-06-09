@@ -5,15 +5,29 @@ Notes::Notes(QString filepath)
     std::fstream f(filepath.toStdString());
 }
 
-void Notes::addNote(){
+bool Notes::addNote(const QString &noteId, const QString& noteText){
+    if(noteList.contains(noteId))
+        return false;
+    noteList[noteId] = noteText;
+    return true;
+}
+void Notes::editNote(const QString &noteId, const QString & edited){
+    noteList[noteId] = edited;
+}
+void Notes::deleteNote(const QString &noteId){
+    noteList.remove(noteId);
 
 }
-void Notes::editNote(){
 
+bool Notes::checkNote(const QString &noteId){
+    return noteList.contains(noteId);
 }
-void Notes::deleteNote(){
 
+QString Notes::getNote(const QString& noteId) const{
+    if(noteList.contains(noteId))
+        return noteList[noteId];
+    return "";
 }
-void Notes::getNotes(){
-
+QHash<QString, QString> Notes::getNotes() const{
+    return noteList;
 }
