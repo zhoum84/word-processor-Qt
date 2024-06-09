@@ -41,6 +41,10 @@ void DocumentHandler::setDocument(QQuickTextDocument *document)
 
     if (m_document)
         connect(m_document->textDocument(), &QTextDocument::modificationChanged, this, &DocumentHandler::modifiedChanged);
+    else{
+        qInfo() << "Lol";
+    }
+
     emit documentChanged();
 }
 
@@ -552,6 +556,8 @@ Q_INVOKABLE void DocumentHandler::spellcheck(){
     misspelledPos.clear();
     dict.clearSimilar();
     QString doc = m_document->textDocument()->toPlainText();
+    if(doc.length() < 1)
+        return;
     QTextCursor cursor = textCursor();
     QTextCharFormat wavy;
 

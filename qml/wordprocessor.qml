@@ -118,6 +118,16 @@ ApplicationWindow {
                 enabled: textArea.canPaste
                 onTriggered: textArea.paste()
             }
+            Platform.MenuItem{
+                text: qsTr("&Undo")
+                enabled: textArea.canUndo
+                onTriggered: textArea.undo()
+            }
+            Platform.MenuItem{
+                text: qsTr("&Redo")
+                enabled: textArea.canRedo
+                onTriggered: textArea.redo()
+            }
 
         }
 
