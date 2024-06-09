@@ -164,8 +164,17 @@ ApplicationWindow {
             title: qsTr("&Tools")
 
             Platform.MenuItem {
+                id: viewPersonalDictionaryOption
                 text: qsTr("View Personal Dictionary")
-                onTriggered: document.clearUserDict();
+                onTriggered: function(){
+                    let words = ""
+                    const userDict = document.viewUserDict();
+                    userDict.forEach((word) => {words += `${word}\n`})
+                    viewLabel.text = qsTr(words);
+                    viewPersonalDictionaryDialog.open()
+                };
+
+
             }
 
             Platform.MenuItem {
@@ -220,6 +229,20 @@ ApplicationWindow {
         text: qsTr("The file has been modified. Quit anyway?")
         buttons: MessageDialog.Yes | MessageDialog.No
         onButtonClicked: function (button, role) { if (role === MessageDialog.YesRole) Qt.quit() }
+    }
+
+    Dialog{
+        id: viewPersonalDictionaryDialog
+        modal: true;
+        title: qsTr("Personal Dictionary")
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
+
+        Label {
+            id: viewLabel
+            text: "This text certainly exists"
+        }
+
     }
 
     header: ToolBar {

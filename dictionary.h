@@ -6,6 +6,7 @@
 #include <QSet>
 #include <fstream>
 #include <QFile>
+#include <QVector>
 
 /**
  * @brief The Dictionary class. Used for spellchecking.
@@ -53,6 +54,8 @@ public:
      * @brief   wipes user dictionary file clean
      */
     void clearUserDict();
+
+    QVector<QString> viewUserDict();
 
     void addError(const QString & text);
 

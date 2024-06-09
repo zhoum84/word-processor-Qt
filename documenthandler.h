@@ -99,6 +99,7 @@ public:
     Q_INVOKABLE QString getCorrectedWord();
     Q_INVOKABLE void addToUserDict();
     Q_INVOKABLE void clearUserDict();
+    Q_INVOKABLE QVector<QString> viewUserDict();
     Q_INVOKABLE void replaceWord(const QString& suggest);
 
     void removeUnderline();

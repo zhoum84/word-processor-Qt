@@ -554,6 +554,11 @@ Q_INVOKABLE void DocumentHandler::clearUserDict(){
     runSpellcheck();
 }
 
+Q_INVOKABLE QVector<QString> DocumentHandler::viewUserDict(){
+    return dict.viewUserDict();
+};
+
+
 Q_INVOKABLE void DocumentHandler::replaceWord(const QString& suggest){
     size_t p = dict.getLastChecked();
     QPair<int, size_t> pos = misspelledPos[p];

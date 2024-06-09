@@ -43,6 +43,11 @@ void Dictionary::clearUserDict(){
     userDictionary.clear();
 }
 
+QVector<QString> Dictionary::viewUserDict(){
+    QVector<QString> words(userDictionary.begin(), userDictionary.end());
+    return words;
+}
+
 void Dictionary::addError(const QString &text)
 {
     errors.push_back(text);
