@@ -1,4 +1,4 @@
-#include "dictionary.h"
+#include "../include/dictionary.h"
 
 #include <QTextStream>
 /**

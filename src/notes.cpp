@@ -1,4 +1,4 @@
-#include "notes.h"
+#include "../include/notes.h"
 
 Notes::Notes(QString filepath) : filepath(filepath), file(filepath)
 {

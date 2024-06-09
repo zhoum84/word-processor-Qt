@@ -11,8 +11,10 @@ set(INSTALL_DIR "${INSTALL_DIR}/qwordprocessor")
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Quick QuickControls2 Concurrent OPTIONAL_COMPONENTS Widgets)
 
+include_directories(include)
+include_directories(src)
 qt_add_executable(wordprocessor WIN32 MACOSX_BUNDLE
-    documenthandler.cpp
+    src/documenthandler.cpp
     main.cpp
 )
 
@@ -33,12 +35,13 @@ qt_add_qml_module(wordprocessor
         "resources/example2.png"
         "resources/example3.png"
     SOURCES
-        dictionary.h
-        dictionary.cpp
-        texthighlighter.h
-        texthighlighter.cpp
-        notes.h
-        notes.cpp
+        include/documenthandler.h
+        include/dictionary.h
+        src/dictionary.cpp
+        include/texthighlighter.h
+        src/texthighlighter.cpp
+        include/notes.h
+        src/notes.cpp
 
 
 

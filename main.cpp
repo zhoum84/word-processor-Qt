@@ -9,7 +9,7 @@
 #include <QQmlContext>
 #include <QQuickStyle>
 
-#include "documenthandler.h"
+#include "include/documenthandler.h"
 
 int main(int argc, char *argv[])
 {

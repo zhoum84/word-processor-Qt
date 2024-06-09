@@ -7,9 +7,9 @@
 #include <QUrl>
 #include <QtQml/qqmlregistration.h>
 
-#include "texthighlighter.h"
-#include "dictionary.h"
-#include "notes.h"
+#include "include/texthighlighter.h"
+#include "include/dictionary.h"
+#include "include/notes.h"
 
 QT_BEGIN_NAMESPACE
 class QTextDocument;
