@@ -736,6 +736,7 @@ ApplicationWindow {
                     if(document.isMisspelled()){
                         var suggest = document.getCorrectedWord();
                         suggestWord.visible = true;
+                        addToPersonalDictionary.visible = true;
                         if(suggest !== "")
                         {
                             suggestWord.text = qsTr("Suggested Word: " + suggest);
@@ -746,11 +747,13 @@ ApplicationWindow {
                             suggestWord.text = qsTr("Could not find suggestion")
                             suggestWord.enabled = false;
                         }
+
                         suggestWordSeperator.visible = true;
 
                     }
                     contextMenu.open();
                     suggestWord.visible = false;
+                    addToPersonalDictionary.visible = false;
                     suggestWordSeperator.visible = false;
                 }
             }
@@ -785,9 +788,16 @@ ApplicationWindow {
         Platform.MenuItem{
             id: suggestWord
             text: qsTr("This should not be seen!")
-            enabled: true
+            enabled: true;
             visible: false;
             onTriggered: function(){document.replaceWord(suggestWord.text.substring(16))}
+        }
+        Platform.MenuItem{
+            id: addToPersonalDictionary
+            text: qsTr("Add to Personal Dictionary")
+            enabled: true;
+            visible: false;
+            onTriggered: function(){document.addToUserDict()}
         }
         Platform.MenuSeparator {
             id: suggestWordSeperator

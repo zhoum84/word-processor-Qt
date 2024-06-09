@@ -3,7 +3,9 @@
 
 #include <QString>
 #include <QHash>
+#include <QSet>
 #include <fstream>
+#include <QFile>
 
 /**
  * @brief The Dictionary class. Used for spellchecking.
@@ -32,6 +34,15 @@ public:
      * @param   ifstream - the file that contains the words to be used
      */
     void loadDict(std::ifstream& infile);
+
+    /**
+     * @brief   loads user dictionary with words from added to a file
+     *
+     * @param   ifstream - the file that contains the words to be used
+     */
+    void loadUserDict(std::ifstream& infile);
+
+    void addToUserDict(const QString& text);
 
     void addError(const QString & text);
 
@@ -97,11 +108,14 @@ public:
 
 private:
     QHash<QString, int> dictionary;
+    QSet<QString> userDictionary;
+    QFile userDictFile;
     QVector<QString> errors;
     QVector<QString> corrected;
     QVector<QString> edits;
     QVector<QString> similar;
     size_t lastChecked;
+
 };
 
 #endif // DICTIONARY_H

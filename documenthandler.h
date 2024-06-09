@@ -97,6 +97,7 @@ public:
 
     Q_INVOKABLE bool isMisspelled();
     Q_INVOKABLE QString getCorrectedWord();
+    Q_INVOKABLE void addToUserDict();
     Q_INVOKABLE void replaceWord(const QString& suggest);
 
     void removeUnderline();

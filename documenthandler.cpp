@@ -23,6 +23,8 @@ DocumentHandler::DocumentHandler(QObject *parent)
 {
     std::ifstream file("wordprocessor/resources/enable1.txt");
     dict.loadDict(file);
+    std::ifstream userDict("wordprocessor/resources/userDictionary.txt");
+    dict.loadUserDict(userDict);
 }
 
 QQuickTextDocument *DocumentHandler::document() const
@@ -203,6 +205,9 @@ void DocumentHandler::saveAs(const QUrl &fileUrl)
         return;
 
     const QString filePath = fileUrl.toLocalFile();
+
+    const bool isPdf = QFileInfo(filePath).suffix().contains(QLatin1String("pdf"));
+
     const bool isHtml = QFileInfo(filePath).suffix().contains(QLatin1String("htm"));
     QFile file(filePath);
     if (!file.open(QFile::WriteOnly | QFile::Truncate | (isHtml ? QFile::NotOpen : QFile::Text))) {
@@ -534,6 +539,14 @@ Q_INVOKABLE QString DocumentHandler::getCorrectedWord(){
     cursor.select(QTextCursor::WordUnderCursor);
     QString misspell = cursor.selectedText();
     return dict.getCorrected(misspell);
+}
+
+Q_INVOKABLE void DocumentHandler::addToUserDict(){
+    QTextCursor cursor = textCursor();
+    cursor.select(QTextCursor::WordUnderCursor);
+    QString misspell = cursor.selectedText();
+    dict.addToUserDict(misspell);
+    runSpellcheck();
 }
 
 Q_INVOKABLE void DocumentHandler::replaceWord(const QString& suggest){
